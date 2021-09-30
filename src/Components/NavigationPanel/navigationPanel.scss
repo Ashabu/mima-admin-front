@@ -1,0 +1,8 @@
+.nav-panel {
+    border-right: 1px solid red;
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    max-width: 260px;
+    height: calc(100vh - 42px);
+}

@@ -1,0 +1,108 @@
+.delete-modal {
+    width: 220px;
+    height: 100px;
+    position: fixed;
+    top: 40%;
+    left: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transition: 0.3s ease-out;
+
+    &.shown {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    &.hidden {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+
+    
+}
+
+
+.edit-modal {
+    width: 60%;
+    position: fixed;
+    top: 30%;
+    left: 20%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 1px black;
+    transition: 0.3s ease-out;
+
+    &.shown {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    &.hidden {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+
+
+    .edit-modal-header {
+        display: flex;
+        flex-flow: column;
+        input {
+            outline: none;
+            border-radius: 5px;
+            height: 35px;
+            border: 1px solid black;
+        }
+    }
+
+    .edit-modal-body {
+        display: flex;
+        flex-flow: column;
+        margin-bottom: 20px;
+
+        textarea {
+            resize: none;
+            height: 120px;
+            outline: none;
+            border-radius: 5px;
+            border: 1px solid black;
+        }
+    }
+    
+}
+
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+
+    button{
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        height: 30px;
+        margin: 0 auto;
+        width: 40%;
+        color: #FFFFFF;
+        cursor: pointer;
+        font-weight: bold;
+
+        &:first-child {
+            background-color: forestgreen;
+        }
+
+        &:last-child {
+            background-color: #9e9e9e;
+        }
+    }
+}
+

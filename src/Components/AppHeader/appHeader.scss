@@ -1,0 +1,24 @@
+.app-header {
+    display: grid;
+    grid-template-columns: 160px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+
+    .app-header-left {
+
+        background-color: black;
+        width: 160px;
+        height: auto;
+    }
+
+    .app-header-right {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+
+        .app-username {
+            margin-right: 20px;
+        }
+    }
+}

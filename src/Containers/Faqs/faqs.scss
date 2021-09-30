@@ -1,0 +1,20 @@
+.page-container {
+    width: 100%;
+    padding: 0 30px;
+    height: calc(100vh - 80px);
+    overflow-x: hidden;
+        overflow-y: scroll;
+
+    .page-header {
+        display: flex;
+
+        button {
+            margin-left: 40px;
+            width: 200px;
+        }
+    }
+
+    .page-body {
+        margin-top: 20px;
+    }
+}
