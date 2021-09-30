@@ -1,9 +1,11 @@
 .btn-wrap {
     position: relative;
+    margin: 0 auto;
 }
 .btn-loader {
     position: absolute;
-    top: -9px;
-    right: 64px;
-    height: 70px;
+    position: absolute;
+    top: 0px;
+    right: 80px;
+    height: 50px;
 }

@@ -3,8 +3,8 @@ import './faqs.scss';
 import Faq from '../../Services/FaqServices';
 import AppLayout from '../../Components/AppLayout/AppLayout';
 import AppSearch from '../../Components/UI/AppSearch/AppSearch';
+import AppButton from '../../Components/UI/AppButton/AppButton';
 import ItemList from '../../Components/ItemLIst/ItemList';
-import BackFlip from '../../Components/UI/BackFlip/BackFlip';
 import DeleteModal from '../../Components/UI/Modals/DeleteModal';
 import EditModal from '../../Components/UI/Modals/EditModal';
 
@@ -16,8 +16,8 @@ const Faqs = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [singleFaqData, setSingleFaqData] = useState(null);
-    const [btnLoading, setBtnLoading] =useState(false);
-    const [step, setStep] = useState(0);
+    const [btnLoading, setBtnLoading] = useState(false);
+    const [responseMessage, setResponseMessage] = useState('');
 
     useEffect(() => {
         handleGetFaqs();
@@ -63,16 +63,21 @@ const Faqs = () => {
     };
 
     const handleNewFaq = (data) => {
+        setBtnLoading(true);
         if (data.isNew) {
             Faq.CreateFaq({ title: data.title, description: data.description })
                 .then(res => {
                     if (res.data.success) {
-                        console.log('crate', res.data);
+                        setBtnLoading(false);
+                        setShowEditModal(false);
+                        handleGetFaqs();
                     } else {
-                        console.log('create res error', res.data);
+                        setBtnLoading(false);
+                        setResponseMessage(res.data.errorMessage.message);
                     };
                 })
                 .catch(e => {
+                    setBtnLoading(false);
                     console.log(e);
                 });
         } else {
@@ -80,12 +85,17 @@ const Faqs = () => {
             Faq.EditFaq(id, { title: data.title, description: data.description })
                 .then(res => {
                     if (res.data.success) {
-                        console.log('delete', res.data);
+                        setBtnLoading(false);
+                        setShowEditModal(false);
+                        handleGetFaqs();
                     } else {
-                        console.log('delete res error', res.data);
+                        setBtnLoading(false);
+                        setResponseMessage(res.data.errorMessage.message);
                     };
+                    setStep(1)
                 })
                 .catch(e => {
+                    setBtnLoading(false);
                     console.log(e);
                 });
         };
@@ -93,51 +103,55 @@ const Faqs = () => {
 
     const handleDeleteFaq = () => {
         setBtnLoading(true);
-        return
-        const {id} = singleFaqData;
+        const { id } = singleFaqData;
         Faq.DeleteFaq(id).then(res => {
-            if(res.data.success) {
-                console.log('delete', res.data)
-                setBtnLoading(false)
+            if (res.data.success) {
+                setBtnLoading(false);
+                setShowDeleteModal(false);
+                handleGetFaqs();
             } else {
-                setBtnLoading(false)
-                console.log('delete res error', res.data)
-            }
+                setBtnLoading(false);
+                setResponseMessage(res.data.errorMessage.message);
+            };
         })
-        .catch(e => {
-            console.log(e);
-        })
+            .catch(e => {
+                setBtnLoading(false);
+                console.log(e);
+            })
     };
-
-
-
-
-
-
 
     return (
         <AppLayout>
-            <DeleteModal 
-                showModal={showDeleteModal} 
-                data={singleFaqData}
-                loading = {btnLoading} 
-                onDeleteFaq = {handleDeleteFaq} 
-                onHideModal={() => { setShowDeleteModal(false) }} />
-            <EditModal showModal={showEditModal} data={singleFaqData} onNewFaq={handleNewFaq} onHideModal={() => setShowEditModal(false)} />
+            <DeleteModal
+                showModal = {showDeleteModal}
+                data = {singleFaqData}
+                loading = {btnLoading}
+                message = {responseMessage}
+                onDeleteFaq = {handleDeleteFaq}
+                onHideModal = {() => { setShowDeleteModal(false) }} />
+            <EditModal
+                showModal = {showEditModal}
+                data = {singleFaqData}
+                loading = {btnLoading}
+                message = {responseMessage}
+                onNewFaq = {handleNewFaq}
+                onHideModal = {() => setShowEditModal(false)} />
 
             <div className='page-container'>
                 <h1>Faqs page</h1>
                 <div className='page-header'>
-                    <AppSearch onSearch={handleSearchFaq} />
-                    <button onClick={() => setShowEditModal(true)}>დამატება</button>
+                    <AppSearch onSearch = {handleSearchFaq} />
+                    <AppButton
+                        onClick = {() => setShowEditModal(true)}>
+                        დამატება
+                    </AppButton>
                 </div>
                 <div className='page-body'>
                     {searchInFaq?.map((faq, i) => (
-                        <ItemList key={i} data={faq} index={i}
-                            onShowModal={() => setShowDeleteModal(true)}
-                            onHideModal={() => setShowEditModal(false)}
-                            onGetFaq={handleGetSingleFaq}
-
+                        <ItemList key = {i} data = {faq} index = {i}
+                            onShowModal = {() => setShowDeleteModal(true)}
+                            onHideModal = {() => setShowEditModal(false)}
+                            onGetFaq = {handleGetSingleFaq}
                         />
                     ))}
                 </div>

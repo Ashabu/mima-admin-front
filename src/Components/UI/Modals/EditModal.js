@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import BackFlip from '../BackFlip/BackFlip';
-import Faq from '../../../Services/FaqServices';
+import AppButton from '../AppButton/AppButton';
 
 const EditModal = (props) => {
     const [isNew, setIsNew] = useState(false);
@@ -12,20 +12,16 @@ const EditModal = (props) => {
         } else {
             setIsNew(true);
         }
-    }, [props.data])
+    }, [props.data]);
 
     const [newTitle, setNewTitle] = useState('');
     const [newDescription, setNewDescription] = useState('');
 
-    let faqData = {
-        
-    };
-    
-    console.log(newTitle, newDescription)
-   
+
 
     return (
-        <>
+
+        <Fragment>
             <BackFlip show={props.showModal} onClick={props.onHideModal} />
             <div className={props.showModal ? 'edit-modal shown' : 'edit-modal hidden'}>
                 <div className='edit-modal-header'>
@@ -36,12 +32,22 @@ const EditModal = (props) => {
                     <span>Description</span>
                     <textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
                 </div>
+                {props.message? <p  style={{color: '#DC143C'}}>{props.message}</p>: null}
                 <div className='modal-buttons'>
-                    <button onClick={()=>props.onNewFaq({isNew, title: newTitle, description: newDescription})}>დიახ</button>
-                    <button onClick={props.onHideModal}>არა</button>
+                    <AppButton
+                        buttonClass='btn btn-yes'
+                        loading={props.loading}
+                        onClick={() => props.onNewFaq({ isNew, title: newTitle, description: newDescription })}>
+                        დიახ
+                    </AppButton>
+                    <AppButton
+                        buttonClass='btn btn-no'
+                        onClick={props.onHideModal}>
+                        არა
+                    </AppButton>
                 </div>
             </div>
-        </>
+        </Fragment>
     );
 };
 
