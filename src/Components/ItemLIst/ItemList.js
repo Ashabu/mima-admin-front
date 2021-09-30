@@ -12,10 +12,10 @@ const ItemList = (props) => {
                 <span className = 'list-item-title'>{title}</span>
                 <span className = 'list-item-desc'>{description}</span>
             </div>
-            <div className = 'list-item-edit' onClick = {() => props.onEditing(props.data)} style={{marginRight: 10}}>
+            <div className = 'list-item-edit' onClick = {() => props.onGetFaq({isEditing:true, data: props.data})} style={{marginRight: 10}}>
                 <img src = '../../Assets/Images/edit-icon.png' alt='icon' />
             </div>
-            <div className = 'list-item-delete' onClick = {props.onShowModal}>
+            <div className = 'list-item-delete' onClick = {() =>  props.onGetFaq({isEditing:false, data: props.data})}>
                 <img src = '../../Assets/Images/delete-icon.png' alt='icon' />
             </div>
         </div>

@@ -85,23 +85,27 @@
     display: flex;
     justify-content: space-around;
 
-    button{
+    .btn{
         outline: none;
         border: none;
         border-radius: 5px;
         height: 30px;
         margin: 0 auto;
-        width: 40%;
+        width: 100px;
         color: #FFFFFF;
         cursor: pointer;
         font-weight: bold;
 
-        &:first-child {
+        &.btn-yes {
             background-color: forestgreen;
         }
 
-        &:last-child {
+        &.btn-no {
             background-color: #9e9e9e;
+        }
+
+        &.btn-danger {
+            background-color: #DC143C;
         }
     }
 }
