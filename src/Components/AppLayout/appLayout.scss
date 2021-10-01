@@ -2,8 +2,10 @@
     .app-layout-header {
         height: 80px;
         border-bottom: 2px solid black;
+        display: flex;
         align-items: center;
-        justify-content: center;
+       
+        width: 100%;
     }
     .app-layout-body {
         display: flex;

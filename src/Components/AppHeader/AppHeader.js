@@ -1,18 +1,22 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './appHeader.scss';
 
 const AppHeader = () => {
     return (
         <div className = 'app-header'>
             <div className = 'app-header-left'>
-                <img src = '../../Assets/Images/mima-logo.svg' alt= 'mima-logo' />
+                <Link to ='home'>
+                    <img src = '../../Assets/Images/mima-logo.svg' alt= 'mima-logo' />
+                    </Link>
+                
             </div>
             <div className = 'app-header-right'>
                 <div className = 'app-username'>
-                    <span>username</span>
+                    <span>Admin</span>
                 </div>
                 <div className = 'app-logout'>
-                    <button>Logout</button>
+                    <Link to = '/'>Logout</Link>
                 </div>
             </div>
             
