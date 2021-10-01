@@ -127,14 +127,14 @@ const Testimonials = () => {
                 data = {singleTestimonialData}
                 loading = {btnLoading}
                 message = {responseMessage}
-                onDeleteTestimonial = {handleDeleteTestimonial}
+                onDeleteData = {handleDeleteTestimonial}
                 onHideModal = {() => { setShowDeleteModal(false) }} />
             <EditModal
                 showModal = {showEditModal}
                 data = {singleTestimonialData}
                 loading = {btnLoading}
                 message = {responseMessage}
-                onNewTestimonial = {handleNewTestimonial}
+                onNewData = {handleNewTestimonial}
                 onHideModal = {() => setShowEditModal(false)} />
 
             <div className='page-container'>
@@ -151,7 +151,7 @@ const Testimonials = () => {
                         <ItemList key = {i} data = {testimonial} index = {i}
                             onShowModal = {() => setShowDeleteModal(true)}
                             onHideModal = {() => setShowEditModal(false)}
-                            onGetTestimonial = {handleGetSingleTestimonial}
+                            onGetData = {handleGetSingleTestimonial}
                         />
                     ))}
                 </div>

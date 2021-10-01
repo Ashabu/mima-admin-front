@@ -1,4 +1,10 @@
 .app-layout {
+    .app-layout-header {
+        height: 80px;
+        border-bottom: 2px solid black;
+        align-items: center;
+        justify-content: center;
+    }
     .app-layout-body {
         display: flex;
     }

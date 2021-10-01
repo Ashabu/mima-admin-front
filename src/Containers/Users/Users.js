@@ -1,8 +1,8 @@
 import React from 'react';
-import './partners.scss';
+import './users.scss'
 import AppLayout from '../../Components/AppLayout/AppLayout';
 
-const Partners = () => {
+const Users = () => {
     return (
         <AppLayout>
             
@@ -10,4 +10,4 @@ const Partners = () => {
     );
 };
 
-export default Partners;
+export default Users;

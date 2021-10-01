@@ -127,14 +127,14 @@ const Faqs = () => {
                 data = {singleFaqData}
                 loading = {btnLoading}
                 message = {responseMessage}
-                onDeleteFaq = {handleDeleteFaq}
+                onDeleteData = {handleDeleteFaq}
                 onHideModal = {() => { setShowDeleteModal(false) }} />
             <EditModal
                 showModal = {showEditModal}
                 data = {singleFaqData}
                 loading = {btnLoading}
                 message = {responseMessage}
-                onNewFaq = {handleNewFaq}
+                onNewData = {handleNewFaq}
                 onHideModal = {() => setShowEditModal(false)} />
 
             <div className='page-container'>
@@ -151,7 +151,7 @@ const Faqs = () => {
                         <ItemList key = {i} data = {faq} index = {i}
                             onShowModal = {() => setShowDeleteModal(true)}
                             onHideModal = {() => setShowEditModal(false)}
-                            onGetFaq = {handleGetSingleFaq}
+                            onGetData = {handleGetSingleFaq}
                         />
                     ))}
                 </div>

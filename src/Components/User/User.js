@@ -1,6 +1,7 @@
 import React from 'react';
+import './user.scss';
 
-const DeleteModal = () => {
+const User = () => {
     return (
         <div>
             
@@ -8,4 +9,4 @@ const DeleteModal = () => {
     );
 };
 
-export default DeleteModal;
+export default User;

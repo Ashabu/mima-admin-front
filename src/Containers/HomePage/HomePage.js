@@ -1,13 +1,12 @@
 import React from 'react';
-import './partners.scss';
 import AppLayout from '../../Components/AppLayout/AppLayout';
 
-const Partners = () => {
+const HomePage = () => {
     return (
         <AppLayout>
-            
+            <h1>Welcome to Mima Admin Panel</h1>
         </AppLayout>
     );
 };
 
-export default Partners;
+export default HomePage;

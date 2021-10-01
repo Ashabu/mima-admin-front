@@ -37,7 +37,7 @@ const EditModal = (props) => {
                     <AppButton
                         buttonClass='btn btn-yes'
                         loading={props.loading}
-                        onClick={() => props.onNewFaq({ isNew, title: newTitle, description: newDescription })}>
+                        onClick={() => props.onNewData({ isNew, title: newTitle, description: newDescription })}>
                         დიახ
                     </AppButton>
                     <AppButton
