@@ -2,7 +2,7 @@ import React from 'react';
 import './itemLIst.scss';
 
 const ItemList = (props) => {
-    const {title, description} = props.data
+    const {title, description, itemKey} = props.data
     return (
         <div className = 'list-item'>
             <div className = 'list-item-index'>
@@ -12,6 +12,7 @@ const ItemList = (props) => {
                 <span className = 'list-item-title'>{title}</span>
                 <span className = 'list-item-desc'>{description}</span>
             </div>
+            
             <div className = 'list-item-edit' onClick = {() => props.onGetData({isEditing:true, data: props.data})} style={{marginRight: 10}}>
                 <img src = '../../Assets/Images/edit-icon.png' alt='icon' />
             </div>

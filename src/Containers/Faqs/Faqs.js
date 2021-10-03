@@ -65,7 +65,7 @@ const Faqs = () => {
     const handleNewFaq = (data) => {
         setBtnLoading(true);
         if (data.isNew) {
-            Faq.CreateFaq({ title: data.title, description: data.description })
+            Faq.CreateFaq({ title: data.title, description: data.description, img: data.img })
                 .then(res => {
                     if (res.data.success) {
                         setBtnLoading(false);

@@ -16,7 +16,23 @@ const EditModal = (props) => {
 
     const [newTitle, setNewTitle] = useState('');
     const [newDescription, setNewDescription] = useState('');
+    const [img, setImg] = useState(null);
 
+    const getBase64String = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    const choseFile = (e) => {
+        getBase64String(e.target.files[0]).then(res => {
+            console.log(res)
+            setImg(res)
+        })
+    }
 
 
     return (
@@ -32,12 +48,13 @@ const EditModal = (props) => {
                     <span>Description</span>
                     <textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
                 </div>
+                <input type = 'file'  onChange={(e) => choseFile(e)}/>
                 {props.message? <p  style={{color: '#DC143C'}}>{props.message}</p>: null}
                 <div className='modal-buttons'>
                     <AppButton
                         buttonClass='btn btn-yes'
                         loading={props.loading}
-                        onClick={() => props.onNewData({ isNew, title: newTitle, description: newDescription })}>
+                        onClick={() => props.onNewData({ isNew, title: newTitle, description: newDescription, img })}>
                         დიახ
                     </AppButton>
                     <AppButton
