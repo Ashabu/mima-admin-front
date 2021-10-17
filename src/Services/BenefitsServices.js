@@ -1,5 +1,5 @@
 import axios from 'axios';
-class Benefits {
+class Benefit {
     GetBenefits = async () => {
         return await axios.get(`http://localhost:8080/getBenefits`);
     };
@@ -18,4 +18,4 @@ class Benefits {
     }
 }
 
-export default new Benefits();
+export default new Benefit();

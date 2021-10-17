@@ -1,83 +1,63 @@
 import React, { useState, useEffect, useContext } from 'react';
-import './faqs.scss';
-import Faq from '../../Services/FaqServices';
+import './marketingTools.scss';
 import AppLayout from '../../Components/AppLayout/AppLayout';
-import AppSearch from '../../Components/UI/AppSearch/AppSearch';
-import AppButton from '../../Components/UI/AppButton/AppButton';
+import MarketingTool from '../../Services/MarketinToolsServices';
+import { AppContext } from '../../Context/AppContext';
 import ItemList from '../../Components/ItemLIst/ItemList';
 import ActionModal from '../../Components/UI/Modals/ActionModal';
-import { AppContext } from '../../Context/AppContext';
+import AppButton from '../../Components/UI/AppButton/AppButton';
 
 
+const MarketingTools = () => {
 
-
-const Faqs = () => {
-
-    const [faqs, setFaqs] = useState([]);
-    const [searchInFaq, setSearchInFaq] = useState();
+    const [marketingTools, setMarketingTools] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [actionType, setActionType] = useState('');
-    const [singleFaqData, setSingleFaqData] = useState(null);
+    const [singleToolData, setSingleToolData] = useState(null);
     const [btnLoading, setBtnLoading] = useState(false);
-    const [responseMessage, setResponseMessage] = useState('');
 
     const { activeLang } = useContext(AppContext);
 
     useEffect(() => {
-        handleGetFaqs();
-        setSearchInFaq(faqs);
+        GetMarketingTools();
     }, []);
 
-    useEffect(() => {
-        setSearchInFaq(faqs);
-    }, [faqs])
-
-
-    const handleGetFaqs = () => {
-        Faq.GetFaqs().then(res => {
-            if (res.data.success) {
-                setFaqs(res.data.data.faqs);
-            } else {
-                console.log('Cannot Get Faqs');
-            };
-        }).catch(e => {
-            console.log(e);
-        });
+    const GetMarketingTools = () => {
+        MarketingTool.GetMarketingTools()
+            .then(res => {
+                if (res.data.success) {
+                    setMarketingTools(res.data.data.tools);
+                } else {
+                    throw Error()
+                }
+            })
+            .catch(e => {
+                console.log(e);
+            });
     };
 
-    const handleSearchFaq = (value) => {
-        let tempFaqs = faqs.filter(f => {
-            return f.title[activeLang].toLowerCase().includes(value.toLowerCase());
-        });
-        if (value === '') {
-            setSearchInFaq([...faqs]);
-        } else {
-            setSearchInFaq([...tempFaqs])
-        };
-    };
-
-    const handleGetSingleFaq = (data) => {
-        setSingleFaqData(data.data);
+    const handleSingleTool = (data) => {
+        setSingleToolData(data.data);
         if (data.isEditing) {
             setActionType('EDIT')
         } else {
             setActionType('DELETE');
         };
         setShowModal(true);
-
     };
 
-    const handleNewFaq = (data) => {
+    const handleNewTool = (data) => {
         setBtnLoading(true);
 
         if (actionType == 'EDIT') {
-            let newData = { ...singleFaqData }
+            let newData = { ...singleToolData }
             newData.title[activeLang] = data.title;;
             newData.description[activeLang] = data.description;
-            Faq.EditFaq(newData._id, newData).then(res => {
+            MarketingTool.UpdateMarketingTool(newData._id, newData).then(res => {
                 if (res.data.success) {
                     setBtnLoading(false);
                     setShowModal(false);
+                    GetMarketingTools();
                 } else {
                     setBtnLoading(false);
                 };
@@ -98,12 +78,13 @@ const Faqs = () => {
             };
             newData.title[activeLang] = data.title;;
             newData.description[activeLang] = data.description;
-            Faq.CreateFaq(newData)
+            console.log(newData)
+            MarketingTool.AddMarketingTool(newData)
                 .then(res => {
                     if (res.data.success) {
                         setBtnLoading(false);
                         setShowModal(false);
-                        handleGetFaqs();
+                        GetMarketingTools();
                     } else {
                         setBtnLoading(false);
                         setResponseMessage(res.data.errorMessage.message);
@@ -114,58 +95,61 @@ const Faqs = () => {
                     console.log(e);
                 });
         };
-    };
+    }
 
-    const handleDeleteFaq = (id) => {
+    const handleDeleteTool = (id) => {
+        
         setBtnLoading(true);
-        Faq.DeleteFaq(id).then(res => {
+        MarketingTool.DeleteMarketingTool(id).then(res => {
             if (res.data.success) {
                 setBtnLoading(false);
                 setShowModal(false);
-                handleGetFaqs();
+                GetMarketingTools();
             } else {
                 setBtnLoading(false);
                 setResponseMessage(res.data.errorMessage.message);
             };
         })
-        .catch(e => {
-            setBtnLoading(false);
-            console.log(e);
-        });
-    };
+            .catch(e => {
+                setBtnLoading(false);
+                console.log(e);
+            });
+    }
+
+
 
     return (
         <AppLayout>
             <ActionModal
                 show={showModal}
-                onHideModal={() => {setSingleFaqData(null); setShowModal(false)}}
+                onHideModal={() => {setSingleToolData(null); setShowModal(false)}}
                 type={actionType}
-                data={singleFaqData}
-                onEditData={handleNewFaq}
-                onDeleteData={handleDeleteFaq}
+                data={singleToolData}
+                onEditData={handleNewTool}
+                onDeleteData={handleDeleteTool}
                 loading={btnLoading} />
-
-            <div className='page-container'>
-                <h1>Faqs page</h1>
+            <div className='cont-wrap'>
+                <h1>marketingTools Page</h1>
                 <div className='page-header'>
-                    <AppSearch onSearch={handleSearchFaq} />
+
                     <AppButton
                         onClick={() => { setActionType('NEW'); setShowModal(true) }}>
                         დამატება
                     </AppButton>
                 </div>
-                <div className='page-body'>
-                    {searchInFaq?.map((faq, i) => (
-                        <ItemList key={i} data={faq} index={i}
+                <div className='cont-1'>
+
+                    {marketingTools?.map((tool, i) => (
+                        <ItemList key={i} data={tool} index={i}
                             onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
-                            onGetData={handleGetSingleFaq}
-                        />
+                            onGetData={handleSingleTool} />
                     ))}
                 </div>
-            </div>
-        </AppLayout>
 
+            </div>
+
+        </AppLayout>
     );
 };
 
-export default Faqs;
+export default MarketingTools;

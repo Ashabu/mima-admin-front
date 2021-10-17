@@ -1,22 +1,14 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, {Fragment, useState } from 'react';
+import './modals.scss';
 import BackFlip from '../BackFlip/BackFlip';
 import AppButton from '../AppButton/AppButton';
 
-const EditModal = (props) => {
-    const [isNew, setIsNew] = useState(false);
-    useEffect(() => {
-        if (props.data) {
-            setIsNew(false);
-            setNewTitle(props.data.title);
-            setNewDescription(props.data.description);
-        } else {
-            setIsNew(true);
-        }
-    }, [props.data]);
+const UploadImageModal = (props) => {
 
-    const [newTitle, setNewTitle] = useState('');
-    const [newDescription, setNewDescription] = useState('');
-    const [img, setImg] = useState(null);
+    const [uploadLoading, setUploadLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState('');
+
+
 
     const getBase64String = (file) => {
         return new Promise((resolve, reject) => {
@@ -25,30 +17,33 @@ const EditModal = (props) => {
             reader.onload = () => resolve(reader.result);
             reader.onerror = error => reject(error);
         });
-    }
+    };
 
     const choseFile = (e) => {
-        getBase64String(e.target.files[0]).then(res => {
+        setUploadLoading(true);
+        getBase64String(e.target.files[0])
+        .then(res => {
             console.log(res)
-            setImg(res)
+            setImageUrl(res);
+            setUploadLoading(false);
         })
-    }
-
+        .catch(e => {
+            console.log(e);
+            setUploadLoading(false)
+        });
+    };
 
     return (
-
+        
         <Fragment>
             <BackFlip show={props.showModal} onClick={props.onHideModal} />
-            <div className={props.showModal ? 'edit-modal shown' : 'edit-modal hidden'}>
-                <div className='edit-modal-header'>
-                    <span>Title</span>
-                    <input type='text' value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
+            <div className={props.showModal ? 'upload-modal shown' : 'upload-modal hidden'}>
+                <div className = 'upload-image' >
+                    <p>Please Select Image</p>
+                    <input type='file'  onChange={(e) => choseFile(e)}   size="60"/>
                 </div>
-                <div className='edit-modal-body'>
-                    <span>Description</span>
-                    <textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
-                </div>
-                <input type = 'file'  onChange={(e) => choseFile(e)}/>
+                
+                
                 {props.message? <p  style={{color: '#DC143C'}}>{props.message}</p>: null}
                 <div className='modal-buttons'>
                     <AppButton
@@ -68,4 +63,4 @@ const EditModal = (props) => {
     );
 };
 
-export default EditModal;
+export default UploadImageModal;

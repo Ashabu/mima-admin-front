@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './testimonials.scss';
 import Testimonial from '../../Services/TestimonialServices';
 import AppLayout from '../../Components/AppLayout/AppLayout';
 import AppSearch from '../../Components/UI/AppSearch/AppSearch';
 import AppButton from '../../Components/UI/AppButton/AppButton';
 import ItemList from '../../Components/ItemLIst/ItemList';
-import DeleteModal from '../../Components/UI/Modals/DeleteModal';
-import EditModal from '../../Components/UI/Modals/EditModal';
+import { AppContext } from '../../Context/AppContext';
+import ActionModal from '../../Components/UI/Modals/ActionModal';
+
+
 
 
 const Testimonials = () => {
 
     const [testimonials, setTestimonials] = useState([]);
     const [searchInTestimonial, setSearchInTestimonial] = useState();
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
     const [singleTestimonialData, setSingleTestimonialData] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [actionType, setActionType] = useState('');
     const [btnLoading, setBtnLoading] = useState(false);
     const [responseMessage, setResponseMessage] = useState('');
+
+    const { activeLang } = useContext(AppContext);
+
 
     useEffect(() => {
         handleGetTestimonials();
@@ -32,7 +37,8 @@ const Testimonials = () => {
     const handleGetTestimonials = () => {
         Testimonial.GetTestimonials().then(res => {
             if (res.data.success) {
-                setTestimonials(res.data.data.testimonials);
+                console.log(res.data.data.testimonials)
+                setTestimonials([...res.data.data.testimonials]);
             } else {
                 console.log('Cannot Get Testimonials');
             };
@@ -43,7 +49,7 @@ const Testimonials = () => {
 
     const handleSearchTestimonial = (value) => {
         let tempTestimonials = testimonials.filter(f => {
-            return f.title.toLowerCase().includes(value.toLowerCase());
+            return f.title[activeLang].toLowerCase().includes(value.toLowerCase());
         });
         if (value === '') {
             setSearchInTestimonial([...testimonials]);
@@ -55,21 +61,35 @@ const Testimonials = () => {
     const handleGetSingleTestimonial = (data) => {
         setSingleTestimonialData(data.data);
         if (data.isEditing) {
-            setShowEditModal(true);
+            setActionType('EDIT')
         } else {
-            setShowDeleteModal(true);
+            setActionType('DELETE')
         }
 
+        setShowModal(true);
     };
 
     const handleNewTestimonial = (data) => {
         setBtnLoading(true);
-        if (data.isNew) {
-            Testimonial.CreateTestimonial({ title: data.title, description: data.description })
+        if (actionType == 'NEW') {
+            let newData = {
+                title: {
+                    en: '',
+                    ru: '',
+                },
+                description: {
+                    en: '',
+                    ru: ''
+                }
+            };
+            newData.title[activeLang] = data.title;;
+            newData.description[activeLang] = data.description;
+            console.log(newData)
+            Testimonial.CreateTestimonial(newData)
                 .then(res => {
                     if (res.data.success) {
                         setBtnLoading(false);
-                        setShowEditModal(false);
+                        setShowModal(false);
                         handleGetTestimonials();
                     } else {
                         setBtnLoading(false);
@@ -81,18 +101,20 @@ const Testimonials = () => {
                     console.log(e);
                 });
         } else {
-            const { id } = singleTestimonialData;
-            Testimonial.EditTestimonial(id, { title: data.title, description: data.description })
+            let newData = { ...singleTestimonialData }
+            newData.title[activeLang] = data.title;;
+            newData.description[activeLang] = data.description;
+
+            Testimonial.EditTestimonial(newData)
                 .then(res => {
                     if (res.data.success) {
                         setBtnLoading(false);
-                        setShowEditModal(false);
+                        setShowModal(false);
                         handleGetTestimonials();
                     } else {
                         setBtnLoading(false);
                         setResponseMessage(res.data.errorMessage.message);
                     };
-                    setStep(1)
                 })
                 .catch(e => {
                     setBtnLoading(false);
@@ -101,13 +123,12 @@ const Testimonials = () => {
         };
     };
 
-    const handleDeleteTestimonial = () => {
+    const handleDeleteTestimonial = (id) => {
         setBtnLoading(true);
-        const { id } = singleTestimonialData;
         Testimonial.DeleteTestimonial(id).then(res => {
             if (res.data.success) {
                 setBtnLoading(false);
-                setShowDeleteModal(false);
+                setShowModal(false);
                 handleGetTestimonials();
             } else {
                 setBtnLoading(false);
@@ -117,41 +138,34 @@ const Testimonials = () => {
             .catch(e => {
                 setBtnLoading(false);
                 console.log(e);
-            })
+            });
     };
 
     return (
         <AppLayout>
-            <DeleteModal
-                showModal = {showDeleteModal}
-                data = {singleTestimonialData}
-                loading = {btnLoading}
-                message = {responseMessage}
-                onDeleteData = {handleDeleteTestimonial}
-                onHideModal = {() => { setShowDeleteModal(false) }} />
-            <EditModal
-                showModal = {showEditModal}
-                data = {singleTestimonialData}
-                loading = {btnLoading}
-                message = {responseMessage}
-                onNewData = {handleNewTestimonial}
-                onHideModal = {() => setShowEditModal(false)} />
+            <ActionModal
+                show={showModal}
+                onHideModal={() => { setSingleTestimonialData(null); setShowModal(false) }}
+                type={actionType}
+                data={singleTestimonialData}
+                onEditData={handleNewTestimonial}
+                onDeleteData={handleDeleteTestimonial}
+                loading={btnLoading} />
 
             <div className='page-container'>
                 <h1>Testimonials page</h1>
                 <div className='page-header'>
-                    <AppSearch onSearch = {handleSearchTestimonial} />
+                    <AppSearch onSearch={handleSearchTestimonial} />
                     <AppButton
-                        onClick = {() => setShowEditModal(true)}>
+                        onClick={() => { setActionType('NEW'); setShowModal(true) }}>
                         დამატება
                     </AppButton>
                 </div>
                 <div className='page-body'>
                     {searchInTestimonial?.map((testimonial, i) => (
-                        <ItemList key = {i} data = {testimonial} index = {i}
-                            onShowModal = {() => setShowDeleteModal(true)}
-                            onHideModal = {() => setShowEditModal(false)}
-                            onGetData = {handleGetSingleTestimonial}
+                        <ItemList key={i} data={testimonial} index={i}
+                            onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
+                            onGetData={handleGetSingleTestimonial}
                         />
                     ))}
                 </div>

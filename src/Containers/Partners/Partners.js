@@ -5,8 +5,6 @@ import AppLayout from '../../Components/AppLayout/AppLayout';
 import AppSearch from '../../Components/UI/AppSearch/AppSearch';
 import AppButton from '../../Components/UI/AppButton/AppButton';
 import ItemList from '../../Components/ItemLIst/ItemList';
-import DeleteModal from '../../Components/UI/Modals/DeleteModal';
-import EditModal from '../../Components/UI/Modals/EditModal';
 
 const Partners = () => {
     const [partners, setPartners] = useState([]);
@@ -120,20 +118,7 @@ const Partners = () => {
 
     return (
         <AppLayout>
-            <DeleteModal
-                showModal = {showDeleteModal}
-                data = {singlePartnerData}
-                loading = {btnLoading}
-                message = {responseMessage}
-                onDeleteData = {handleDeletePartner}
-                onHideModal = {() => { setShowDeleteModal(false) }} />
-            <EditModal
-                showModal = {showEditModal}
-                data = {singlePartnerData}
-                loading = {btnLoading}
-                message = {responseMessage}
-                onNewData = {handleNewPartner}
-                onHideModal = {() => setShowEditModal(false)} />
+            
 
             <div className='page-container'>
                 <h1>Partners page</h1>

@@ -1,0 +1,30 @@
+
+.cont-wrap {
+width: 100%;
+padding: 0 20px;
+
+.cont-1 {
+    position: relative;
+    margin-bottom: 50px;
+
+    .list-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+    
+        .action-icons {
+            cursor: pointer;
+            
+            width: auto;
+            height: auto;
+            img {
+                width: 25px;
+                height: 25px;
+                margin: 0 10px;
+            }
+        }
+    }
+}
+}

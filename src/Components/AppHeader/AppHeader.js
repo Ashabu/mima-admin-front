@@ -1,34 +1,13 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../../Context/AppContext';
 import './appHeader.scss';
-import Lang from '../../Services/SetLang';
-import { Langs } from './../../Constants/Lang';
 
-let langs = []
 
 const AppHeader = () => {
 
-    langs = Object.entries(Langs)
-   
-    const[currentLang, setCurrentLang] = useState(langs);
 
-   
-
-    const onChangeLang = () => {
-        debugger
-        setCurrentLang(lang => {
-            let nextEl = lang[0];
-             lang[0] = lang[1];
-             lang[1] = nextEl
-            return lang
-        });
-
-        Lang.getLang(currentLang[1][1]);
-    }
-    
-
-    console.log(currentLang)
-
+    const {setLang} = useContext(AppContext);
 
 
 
@@ -41,10 +20,10 @@ const AppHeader = () => {
                 
             </div>
             <div className = 'app-header-right'>
-                <div style={{marginRight: 20, cursor: 'pointer'}} onClick = {onChangeLang}>
+                <div style={{marginRight: 20, cursor: 'pointer'}} onClick = {() => setLang('en')}>
                     ENG
                 </div>
-                <div style={{marginRight: 20, cursor: 'pointer'}}>
+                <div style={{marginRight: 20, cursor: 'pointer'}} onClick = {() => setLang('ru')}>
                     RU
                 </div>
                 <div className = 'app-username'>

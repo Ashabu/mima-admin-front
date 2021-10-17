@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './itemLIst.scss';
+import { AppContext } from '../../Context/AppContext';
 
 const ItemList = (props) => {
-    const {title, description, itemKey} = props.data
+    const {title, description, itemKey, linkUrl, imgUrl} = props.data;
+    const {activeLang} = useContext(AppContext)
     return (
         <div className = 'list-item'>
             <div className = 'list-item-index'>
                 {props.index + 1}
             </div>
             <div className = 'list-item-body'>
-                <span className = 'list-item-title'>{title}</span>
-                <span className = 'list-item-desc'>{description}</span>
+                <img src = {imgUrl} />
+                <span className = 'list-item-title'>{linkUrl || title[activeLang]}</span>
+                <span className = 'list-item-desc'>{description?.[activeLang]}</span>
             </div>
             
             <div className = 'list-item-edit' onClick = {() => props.onGetData({isEditing:true, data: props.data})} style={{marginRight: 10}}>
