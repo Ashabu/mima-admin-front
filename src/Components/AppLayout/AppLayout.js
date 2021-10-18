@@ -1,7 +1,6 @@
 import React from 'react';
 import './appLayout.scss';
 import AppHeader from '../AppHeader/AppHeader';
-import NavigationPanel from '../NavigationPanel/NavigationPanel';
 
 const AppLayout = (props) => {
     return (
@@ -10,7 +9,7 @@ const AppLayout = (props) => {
                 <AppHeader/>
             </div>
             <div className = 'app-layout-body'>
-                <NavigationPanel/>
+                
                 {props.children}  
             </div>
             

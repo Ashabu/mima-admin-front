@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import './firstContainer.scss';
 import { AppContext } from '../../Context/AppContext';
 import AppLayout from '../../Components/AppLayout/AppLayout';
-
 import Affiliate from '../../Services/AffiliateService';
 import ActionModal from '../../Components/UI/Modals/ActionModal';
 import AppButton from '../../Components/UI/AppButton/AppButton';

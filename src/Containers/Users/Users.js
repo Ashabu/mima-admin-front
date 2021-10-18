@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './users.scss'
 import AppLayout from '../../Components/AppLayout/AppLayout';
-import axios from 'axios'
 import UserList from '../../Components/ItemLIst/UserList';
+import User from '../../Services/UserServices';
+import AppButton from '../../Components/UI/AppButton/AppButton';
 
 const Users = () => {
 
@@ -10,10 +11,13 @@ const Users = () => {
 
 
     useEffect(() => {
-        axios.get('http://localhost:8080/getUsers').then(res => {
+       User.GetUsers().then(res => {
             setUsers(res.data.data.users)
         })
     }, [])
+
+
+
 
 
     return (

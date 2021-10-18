@@ -1,6 +1,6 @@
 .app-header {
     display: grid;
-    grid-template-columns: 160px auto;
+    grid-template-columns: 160px auto auto;
     padding: 0 20px;
     box-sizing: border-box;
     justify-content: space-between;
@@ -12,7 +12,31 @@
         width: 160px;
         height: auto;
     }
-
+    .app-header-mid {
+        ul {
+            display: flex;
+            li {
+                list-style-type: none;
+                margin-right: 10px;
+                font-size: 20px;
+                a{
+                    text-decoration: none;
+                    color: black
+                }
+                &:hover {
+                    border-bottom: 2px solid black;
+                    background-color: black;
+                    
+                    a {
+                        color: #FFFFFF;
+                    }
+                    
+                }
+            }
+        }
+        
+        
+    }
     .app-header-right {
         display: flex;
         flex-direction: row;

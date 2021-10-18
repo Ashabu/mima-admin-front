@@ -30,7 +30,6 @@
         width: 100%;
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: center;
         .content {
             display: flex;
@@ -40,6 +39,19 @@
             span {
                 text-align: start;
             }
+        }
+    }
+    .upload-image {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 30px;
+    
+        p {
+            font-size: 22px;
+            line-height: 1.5;
         }
     }
 
@@ -114,19 +126,13 @@
             border: 1px solid black;
         }
     }
-
+   
     .edit-modal-body {
         display: flex;
         flex-flow: column;
         margin-bottom: 20px;
 
-        textarea {
-            resize: none;
-            height: 120px;
-            outline: none;
-            border-radius: 5px;
-            border: 1px solid black;
-        }
+        
     }
     
 }
@@ -161,6 +167,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        width: 100%;
         margin-bottom: 30px;
     
         p {

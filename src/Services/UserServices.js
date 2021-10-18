@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 class User  {
-    GetFaqs = async () => {
+    GetUsers = async () => {
         return await axios.get(`http://localhost:8080/getUsers`);
     };
 

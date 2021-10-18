@@ -10,6 +10,8 @@ const ActionModal = (props) => {
 
     const { activeLang } = useContext(AppContext);
 
+    console.log(data)
+
 
     const [newValue, setNewValue] = useState('');
     const [newDescValue, setNewDescValue] = useState('');
@@ -18,7 +20,8 @@ const ActionModal = (props) => {
 
 
     useEffect(() => {
-        if (data && type == 'EDIT') {
+        if (data !== undefined && type == 'EDIT') {
+            
             if (data.title) {
                 setNewValue(data.title[activeLang]);
             }
@@ -35,6 +38,7 @@ const ActionModal = (props) => {
             if(data.imgUrl) {
                 setImageUrl(data.imgUrl)
             }
+            debugger
 
         } else {
             setNewValue('');
