@@ -9,9 +9,8 @@ class User  {
         return await axios.post(`http://localhost:8080/signUp`, data);
     }
 
-    SignIn = async (id, data) => {
-        console.log(id, data)
-        return await axios.put(`http://localhost:8080/signIn/`, data);
+    SignIn = async (data) => {
+        return await axios.post(`http://localhost:8080/signIn`, data);
     };
 
     DeleteUser = async (id) => {

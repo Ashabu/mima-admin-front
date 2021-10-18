@@ -1,10 +1,11 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
+import './modals.scss';
 import BackDrop from './BackDrop';
 import AppButton from '../AppButton/AppButton';
 import { AppContext } from '../../../Context/AppContext';
 
 const ActionModal = (props) => {
-    const { data, loading, onEditData, onDeleteData, onHideModal, show, type } = props;
+    const { data, loading, onEditData, onDeleteData, onHideModal, show, type, withImg, hasTitle } = props;
 
 
     const { activeLang } = useContext(AppContext);
@@ -18,11 +19,27 @@ const ActionModal = (props) => {
 
     useEffect(() => {
         if (data && type == 'EDIT') {
-            setNewValue(data.title[activeLang]);
-            setNewDescValue(data.description[activeLang]);
+            if (data.title) {
+                setNewValue(data.title[activeLang]);
+            }
+
+            if (data.description) {
+                setNewDescValue(data.description[activeLang]);
+            } else if(data.subTitle) {
+                setNewDescValue(data.subTitle[activeLang])
+
+            } else {
+                setNewDescValue(data.linkUrl);
+            }
+
+            if(data.imgUrl) {
+                setImageUrl(data.imgUrl)
+            }
+
         } else {
             setNewValue('');
             setNewDescValue('');
+            setImageUrl('');
         };
     }, [data, activeLang]);
 
@@ -54,10 +71,11 @@ const ActionModal = (props) => {
 
     const handleAction = () => {
         if (type == 'DELETE') {
+            console.log(data._id)
             onDeleteData(data._id);
             return;
         } else {
-            onEditData({ title: newValue, description: newDescValue });
+            onEditData({ title: newValue, description: newDescValue, imgUrl: imageUrl });
             return;
         }
     }
@@ -69,12 +87,12 @@ const ActionModal = (props) => {
         ModalBody = (
             <div className='action-modal-body'>
 
-                <div className='content'>
+              {hasTitle? <div className='content'>
                     <span>
                         Title
                     </span>
                     <input type='text' value={newValue} onInput={(e) => setNewValue(e.target.value)} />
-                </div>
+                </div> : null}
 
                 <div className='content'>
                     <span>
@@ -83,6 +101,12 @@ const ActionModal = (props) => {
                     <textarea type='text' value={newDescValue} onInput={(e) => setNewDescValue(e.target.value)} />
                 </div>
 
+                {withImg ?
+                    <div className='upload-image' >
+                        <p>Please Select Image</p>
+                        <input type='file' onChange={(e) => choseFile(e)} size="60" />
+                    </div> : null}
+
             </div>
         );
     };
@@ -90,9 +114,9 @@ const ActionModal = (props) => {
     if (type == 'DELETE') {
         ModalBody = (
             <div className='action-modal-body'>
-                <span>
+                <p>
                     ნამდვივლად გსურთ წაშლა ?
-                </span>
+                </p>
             </div>
         );
     };
@@ -100,7 +124,7 @@ const ActionModal = (props) => {
     if (type == 'UPLOAD') {
         <div className='upload-image' >
             <p>Please Select Image</p>
-            <input type='file' onChange={(e) => choseFile(e)} size="60" />
+            <input type='file' value = {imageUrl} onChange={(e) => choseFile(e)} size="60" />
         </div>
     }
 
@@ -112,12 +136,11 @@ const ActionModal = (props) => {
         <Fragment>
             <BackDrop show={show} />
             <div className={show ? 'action-modal shown' : 'action-modal hidden'}>
-                <div className='action-modal-body'>
                     {ModalBody}
-                </div>
+                
                 <div className='action-modal-buttons'>
                     <AppButton
-                        buttonClass='btn btn-danger'
+                        buttonClass={type == 'DELETE'? 'btn btn-danger' : 'btn btn-yes'}
                         loading={loading}
                         onClick={handleAction}>
                         დიახ

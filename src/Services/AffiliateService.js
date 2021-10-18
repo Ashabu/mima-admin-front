@@ -10,7 +10,6 @@ class Affiliate {
     }
 
     UpdateAffiliateInfo = async (id, data) => {
-        console.log(id, data)
         return await axios.put(`http://localhost:8080/editMainInfo/${id}`, data);
     };
 

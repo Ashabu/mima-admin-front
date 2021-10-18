@@ -1,19 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './partners.scss';
-import Partner  from '../../Services/PartnerServices';
+import Partner from '../../Services/PartnerServices';
 import AppLayout from '../../Components/AppLayout/AppLayout';
 import AppSearch from '../../Components/UI/AppSearch/AppSearch';
 import AppButton from '../../Components/UI/AppButton/AppButton';
-import ItemList from '../../Components/ItemLIst/ItemList';
+import ActionModal from '../../Components/UI/Modals/ActionModal';
+import ItemListWithImg from '../../Components/ItemLIst/ItemListWithImg';
+import { AppContext } from '../../Context/AppContext';
 
 const Partners = () => {
     const [partners, setPartners] = useState([]);
     const [searchInPartner, setSearchInPartner] = useState();
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [singlePartnerData, setSinglePartnerData] = useState(null);
     const [btnLoading, setBtnLoading] = useState(false);
+    const [actionType, setActionType] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
+
+    const { activeLang } = useContext(AppContext);
 
     useEffect(() => {
         handleGetPartners();
@@ -39,7 +43,7 @@ const Partners = () => {
 
     const handleSearchPartner = (value) => {
         let tempPartners = partners.filter(f => {
-            return f.title.toLowerCase().includes(value.toLowerCase());
+            return f.linkUrl.toLowerCase().includes(value.toLowerCase());
         });
         if (value === '') {
             setSearchInPartner([...partners]);
@@ -51,21 +55,27 @@ const Partners = () => {
     const handleGetSinglePartner = (data) => {
         setSinglePartnerData(data.data);
         if (data.isEditing) {
-            setShowEditModal(true);
-        } else {
-            setShowDeleteModal(true);
-        }
+            setActionType('EDIT')
 
+        } else {
+            setActionType('DELETE')
+        };
+
+        setShowModal(true);
     };
 
     const handleNewPartner = (data) => {
         setBtnLoading(true);
-        if (data.isNew) {
-            Partner.CreatePartner({ title: data.title, description: data.description })
+        if (actionType == 'NEW') {
+            let newData = {
+                linkUrl: data.description,
+                imgUrl: data.imgUrl
+            };
+            Partner.CreatePartner(newData)
                 .then(res => {
                     if (res.data.success) {
                         setBtnLoading(false);
-                        setShowEditModal(false);
+                        setShowModal(false);
                         handleGetPartners();
                     } else {
                         setBtnLoading(false);
@@ -77,18 +87,24 @@ const Partners = () => {
                     console.log(e);
                 });
         } else {
-            const { id } = singlePartnerData;
-            Partner.EditPartner(id, { title: data.title, description: data.description })
+            let newData = { ...singlePartnerData };
+           
+            newData.linkUrl = data.description;
+            if(data.imgUrl) {
+                newData.imgUrl = data.imgUrl
+            }
+            
+
+            Partner.EditPartner(newData._id, newData)
                 .then(res => {
                     if (res.data.success) {
                         setBtnLoading(false);
-                        setShowEditModal(false);
+                        setShowModal(false);
                         handleGetPartners();
                     } else {
                         setBtnLoading(false);
                         setResponseMessage(res.data.errorMessage.message);
                     };
-                    setStep(1)
                 })
                 .catch(e => {
                     setBtnLoading(false);
@@ -97,13 +113,12 @@ const Partners = () => {
         };
     };
 
-    const handleDeletePartner = () => {
+    const handleDeletePartner = (id) => {
         setBtnLoading(true);
-        const { id } = singlePartnerData;
         Partner.DeletePartner(id).then(res => {
             if (res.data.success) {
                 setBtnLoading(false);
-                setShowDeleteModal(false);
+                setShowModal(false);
                 handleGetPartners();
             } else {
                 setBtnLoading(false);
@@ -118,23 +133,31 @@ const Partners = () => {
 
     return (
         <AppLayout>
-            
+            <ActionModal
+                show={showModal}
+                onHideModal={() => { setSinglePartnerData(null); setShowModal(false) }}
+                withImg
+                type={actionType}
+                data={singlePartnerData}
+                onEditData={handleNewPartner}
+                onDeleteData={handleDeletePartner}
+                loading={btnLoading} />
 
             <div className='page-container'>
                 <h1>Partners page</h1>
                 <div className='page-header'>
-                    <AppSearch onSearch = {handleSearchPartner} />
+                    <AppSearch onSearch={handleSearchPartner} />
                     <AppButton
-                        onClick = {() => setShowEditModal(true)}>
+                        buttonClass='button-add'
+                        onClick={() => { setSinglePartnerData(null); setActionType('NEW'); setShowModal(true) }}>
                         დამატება
                     </AppButton>
                 </div>
                 <div className='page-body'>
                     {searchInPartner?.map((partner, i) => (
-                        <ItemList key = {i} data = {partner} index = {i}
-                            onShowModal = {() => setShowDeleteModal(true)}
-                            onHideModal = {() => setShowEditModal(false)}
-                            onGetData = {handleGetSinglePartner}
+                        <ItemListWithImg key={i} data={partner} index={i}
+                            onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
+                            onGetData={handleGetSinglePartner}
                         />
                     ))}
                 </div>

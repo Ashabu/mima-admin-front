@@ -98,7 +98,7 @@ const MarketingTools = () => {
     }
 
     const handleDeleteTool = (id) => {
-        
+
         setBtnLoading(true);
         MarketingTool.DeleteMarketingTool(id).then(res => {
             if (res.data.success) {
@@ -121,8 +121,9 @@ const MarketingTools = () => {
     return (
         <AppLayout>
             <ActionModal
+                hasTitle
                 show={showModal}
-                onHideModal={() => {setSingleToolData(null); setShowModal(false)}}
+                onHideModal={() => { setSingleToolData(null); setShowModal(false) }}
                 type={actionType}
                 data={singleToolData}
                 onEditData={handleNewTool}
@@ -133,6 +134,7 @@ const MarketingTools = () => {
                 <div className='page-header'>
 
                     <AppButton
+                        buttonClass='button-add'
                         onClick={() => { setActionType('NEW'); setShowModal(true) }}>
                         დამატება
                     </AppButton>

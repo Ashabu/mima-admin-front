@@ -137,6 +137,7 @@ const Faqs = () => {
     return (
         <AppLayout>
             <ActionModal
+                hasTitle
                 show={showModal}
                 onHideModal={() => {setSingleFaqData(null); setShowModal(false)}}
                 type={actionType}
@@ -150,6 +151,7 @@ const Faqs = () => {
                 <div className='page-header'>
                     <AppSearch onSearch={handleSearchFaq} />
                     <AppButton
+                    buttonClass='button-add'
                         onClick={() => { setActionType('NEW'); setShowModal(true) }}>
                         დამატება
                     </AppButton>

@@ -3,7 +3,9 @@ import './benefits.scss';
 import AppLayout from '../../Components/AppLayout/AppLayout';
 import Benefit from '../../Services/BenefitsServices';
 import ActionModal from '../../Components/UI/Modals/ActionModal';
+import ItemListWithImg from '../../Components/ItemLIst/ItemListWithImg';
 import { AppContext } from '../../Context/AppContext';
+import AppButton from '../../Components/UI/AppButton/AppButton';
 
 const Benefits = () => {
 
@@ -13,8 +15,8 @@ const Benefits = () => {
     const [actionType, setActionType] = useState('');
     const [btnLoading, setBtnLoading] = useState(false);
     const [responseMessage, setResponseMessage] = useState('');
-    
-    const {activeLang} = useContext(AppContext);
+
+    const { activeLang } = useContext(AppContext);
 
     useEffect(() => {
         GetBenefits();
@@ -22,42 +24,131 @@ const Benefits = () => {
 
     const GetBenefits = () => {
         Benefit.GetBenefits()
-        .then(res => {
-            if(res.data.success) {
-                console.log(res.data.data.benefits)
-                setBenefits(res.data.data.benefits);
-                    
-            } else {
-                throw Error()
-            }
-        })
-        .catch(err => {
-            console.log(err)
-        });
+            .then(res => {
+                if (res.data.success) {
+                    console.log(res.data.data.benefits)
+                    setBenefits(res.data.data.benefits);
+
+                } else {
+                    throw Error()
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            });
     };
+
+    const handleGetSingleBenefit = (data) => {
+        setSingleBenefitData(data.data);
+        if (data.isEditing) {
+            setActionType('EDIT')
+        } else {
+            setActionType('DELETE')
+        }
+        setShowModal(true);
+    };
+
+    const handleNewBenefit = (data) => {
+        setBtnLoading(true);
+        if (actionType == 'NEW') {
+            let newData = {
+                description: {
+                    en: '',
+                    ru: '',
+                },
+                imgUrl: data.imgUrl
+            };
+            newData.description[activeLang] = data.description;
+            console.log(newData)
+            Benefit.CreateBenefit(newData)
+                .then(res => {
+                    if (res.data.success) {
+                        setBtnLoading(false);
+                        setShowModal(false);
+                        GetBenefits();
+                    } else {
+                        setBtnLoading(false);
+                        setResponseMessage(res.data.errorMessage.message);
+                    };
+                })
+                .catch(e => {
+                    setBtnLoading(false);
+                    console.log(e);
+                });
+        } else {
+            let newData = { ...singleBenefitData }
+            newData.description[activeLang] = data.description;
+            if (data.imgUrl) {
+                newData.imgUrl = data.imgUrl;
+            }
+            console.log(newData);
+            Benefit.EditBenefit(newData._id, newData)
+                .then(res => {
+                    if (res.data.success) {
+                        setBtnLoading(false);
+                        setShowModal(false);
+                        GetBenefits();
+                    } else {
+                        setBtnLoading(false);
+                        setResponseMessage(res.data.errorMessage.message);
+                    };
+                })
+                .catch(e => {
+                    setBtnLoading(false);
+                    console.log(e);
+                });
+        };
+    };
+
+    const handleDeleteBenefit = (id) => {
+        setBtnLoading(true);
+        Benefit.DeleteBenefit(id).then(res => {
+            if (res.data.success) {
+                setBtnLoading(false);
+                setShowModal(false);
+                GetBenefits();
+            } else {
+                setBtnLoading(false);
+                setResponseMessage(res.data.errorMessage.message);
+            };
+        })
+            .catch(e => {
+                setBtnLoading(false);
+                console.log(e);
+            });
+    };
+
+
 
 
 
     return (
         <AppLayout>
-              <ActionModal
+            <ActionModal
                 show={showModal}
-                onHideModal={() => { setSingleTestimonialData(null); setShowModal(false) }}
+                onHideModal={() => { setSingleBenefitData(null); setShowModal(false) }}
+                withImg
                 type={actionType}
-                data={singleTestimonialData}
-                onEditData={handleNewTestimonial}
-                onDeleteData={handleDeleteTestimonial}
+                data={singleBenefitData}
+                onEditData={handleNewBenefit}
+                onDeleteData={handleDeleteBenefit}
                 loading={btnLoading} />
-                
-            <div className = 'cont-wrap'>
+
+            <div className='cont-wrap'>
                 <h1>Benefits Page</h1>
+                <div className='page-header'>
+                    <AppButton
+                        buttonClass='button-add'
+                        onClick={() => { setSingleBenefitData(null); setActionType('NEW'); setShowModal(true) }}>
+                        დამატება
+                    </AppButton>
+                </div>
                 {benefits?.map((b, i) => (
-                    <div className='cont-1' key={i}>
-                    <img src = {b.imgUrl} />
-                    <p>{b.description?.en}</p>
-                  </div>
+                    <ItemListWithImg key={i} data={b} index={i}
+                        onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
+                        onGetData={handleGetSingleBenefit} />
                 ))}
-                
+
 
             </div>
 

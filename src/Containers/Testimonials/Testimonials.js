@@ -101,11 +101,11 @@ const Testimonials = () => {
                     console.log(e);
                 });
         } else {
-            let newData = { ...singleTestimonialData }
-            newData.title[activeLang] = data.title;;
+            let newData = { ...singleTestimonialData };
+            newData.title[activeLang] = data.title;
             newData.description[activeLang] = data.description;
 
-            Testimonial.EditTestimonial(newData)
+            Testimonial.EditTestimonial(newData._id, newData)
                 .then(res => {
                     if (res.data.success) {
                         setBtnLoading(false);
@@ -144,6 +144,7 @@ const Testimonials = () => {
     return (
         <AppLayout>
             <ActionModal
+                hasTitle
                 show={showModal}
                 onHideModal={() => { setSingleTestimonialData(null); setShowModal(false) }}
                 type={actionType}
@@ -157,7 +158,8 @@ const Testimonials = () => {
                 <div className='page-header'>
                     <AppSearch onSearch={handleSearchTestimonial} />
                     <AppButton
-                        onClick={() => { setActionType('NEW'); setShowModal(true) }}>
+                        buttonClass='button-add'
+                        onClick={() => { setActionType('NEW'); setSingleTestimonialData(null); setShowModal(true) }}>
                         დამატება
                     </AppButton>
                 </div>

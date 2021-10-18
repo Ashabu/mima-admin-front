@@ -7,7 +7,7 @@ import './appHeader.scss';
 const AppHeader = () => {
 
 
-    const {setLang} = useContext(AppContext);
+    const {activeLang,  setLang} = useContext(AppContext);
 
 
 
@@ -20,10 +20,10 @@ const AppHeader = () => {
                 
             </div>
             <div className = 'app-header-right'>
-                <div style={{marginRight: 20, cursor: 'pointer'}} onClick = {() => setLang('en')}>
+                <div className = {activeLang === 'en'? 'lang active' : 'lang' } onClick = {() => setLang('en')}>
                     ENG
                 </div>
-                <div style={{marginRight: 20, cursor: 'pointer'}} onClick = {() => setLang('ru')}>
+                <div className =  {activeLang === 'ru'? 'lang active' : 'lang'}  onClick = {() => setLang('ru')}>
                     RU
                 </div>
                 <div className = 'app-username'>
