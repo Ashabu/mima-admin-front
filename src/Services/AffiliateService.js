@@ -2,20 +2,32 @@ import axios from 'axios';
 
 class Affiliate {
     GetAffiliateInfos = async () => {
-        return await axios.get(`http://localhost:8080/getMainInfo`);
+        return await axios.get(`${globalConfig.api_URL}/getMainInfo`);
     };
 
     AddAffiliateInfo = async (data) => {
-        return await axios.post(`http://localhost:8080/addMainInfo`, data);
+        return await axios.post(`${globalConfig.api_URL}/addMainInfo`, data);
     }
 
     UpdateAffiliateInfo = async (id, data) => {
-        return await axios.put(`http://localhost:8080/editMainInfo/${id}`, data);
+        return await axios.put(`${globalConfig.api_URL}/editMainInfo/${id}`, data);
     };
 
     DeleteAffiliateInfo= async (id) => {
-        return await axios.delete(`http://localhost:8080/deleteMainInfo/${id}`);
-    }
+        return await axios.delete(`${globalConfig.api_URL}/deleteMainInfo/${id}`);
+    };
+
+    AddAffiliateBaner = async (data) => {
+        return await axios.post(`${globalConfig.api_URL}/mainInfo/addPicture`, data);
+    };
+
+    DeleteAffiliateBaner = async (id, imgId) => {
+        let data = {
+            pictureId: imgId
+        };
+
+        return await axios.put(`${globalConfig.api_URL}/mainInfo/deletePicture/${id}`, data);
+    };
 }
 
 export default new Affiliate();

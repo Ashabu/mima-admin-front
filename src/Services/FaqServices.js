@@ -1,20 +1,20 @@
 import axios from 'axios';
 class Faq {
     GetFaqs = async () => {
-        return await axios.get(`http://localhost:8080/getFaqs`);
+        return await axios.get(`${globalConfig.api_URL}/getFaqs`);
     };
 
     CreateFaq = async (data) => {
-        return await axios.post(`http://localhost:8080/addFaq`, data);
+        return await axios.post(`${globalConfig.api_URL}/addFaq`, data);
     }
 
     EditFaq = async (id, data) => {
         console.log(id, data)
-        return await axios.put(`http://localhost:8080/editFaq/${id}`, data);
+        return await axios.put(`${globalConfig.api_URL}/editFaq/${id}`, data);
     };
 
     DeleteFaq = async (id) => {
-        return await axios.delete(`http://localhost:8080/deleteFaq/${id}`);
+        return await axios.delete(`${globalConfig.api_URL}/deleteFaq/${id}`);
     }
 }
 

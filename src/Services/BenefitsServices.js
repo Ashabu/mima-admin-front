@@ -1,20 +1,20 @@
 import axios from 'axios';
 class Benefit {
     GetBenefits = async () => {
-        return await axios.get(`http://localhost:8080/getBenefits`);
+        return await axios.get(`${globalConfig.api_URL}/getBenefits`);
     };
 
     CreateBenefit = async (data) => {
-        return await axios.post(`http://localhost:8080/addBenefit`, data);
+        return await axios.post(`${globalConfig.api_URL}/addBenefit`, data);
     }
 
     EditBenefit = async (id, data) => {
         console.log(id, data)
-        return await axios.put(`http://localhost:8080/editBenefit/${id}`, data);
+        return await axios.put(`${globalConfig.api_URL}/editBenefit/${id}`, data);
     };
 
     DeleteBenefit = async (id) => {
-        return await axios.delete(`http://localhost:8080/deleteBenefit/${id}`);
+        return await axios.delete(`${globalConfig.api_URL}/deleteBenefit/${id}`);
     }
 }
 

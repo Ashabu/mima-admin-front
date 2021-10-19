@@ -10,7 +10,6 @@ const ActionModal = (props) => {
 
     const { activeLang } = useContext(AppContext);
 
-    console.log(data)
 
 
     const [newValue, setNewValue] = useState('');
@@ -21,24 +20,23 @@ const ActionModal = (props) => {
 
     useEffect(() => {
         if (data !== undefined && type == 'EDIT') {
-            
+
             if (data.title) {
                 setNewValue(data.title[activeLang]);
             }
 
             if (data.description) {
                 setNewDescValue(data.description[activeLang]);
-            } else if(data.subTitle) {
+            } else if (data.subTitle) {
                 setNewDescValue(data.subTitle[activeLang])
 
             } else {
                 setNewDescValue(data.linkUrl);
             }
 
-            if(data.imgUrl) {
+            if (data.imgUrl) {
                 setImageUrl(data.imgUrl)
             }
-            debugger
 
         } else {
             setNewValue('');
@@ -75,9 +73,10 @@ const ActionModal = (props) => {
 
     const handleAction = () => {
         if (type == 'DELETE') {
-            console.log(data._id)
             onDeleteData(data._id);
             return;
+        } else if (type === 'DELETE_IMG') {
+            onDeleteData();
         } else {
             onEditData({ title: newValue, description: newDescValue, imgUrl: imageUrl });
             return;
@@ -91,7 +90,7 @@ const ActionModal = (props) => {
         ModalBody = (
             <div className='action-modal-body'>
 
-              {hasTitle? <div className='content'>
+                {hasTitle ? <div className='content'>
                     <span>
                         Title
                     </span>
@@ -115,7 +114,7 @@ const ActionModal = (props) => {
         );
     };
 
-    if (type == 'DELETE') {
+    if (type == 'DELETE' || type == 'DELETE_IMG') {
         ModalBody = (
             <div className='action-modal-body'>
                 <p>
@@ -126,11 +125,11 @@ const ActionModal = (props) => {
     };
 
     if (type == 'UPLOAD') {
-        <div className='upload-image' >
+        ModalBody = (<div className='upload-image' >
             <p>Please Select Image</p>
-            <input type='file' value = {imageUrl} onChange={(e) => choseFile(e)} size="60" />
-        </div>
-    }
+            <input type='file' onChange={(e) => choseFile(e)} size="60" />
+        </div>)
+    };
 
 
 
@@ -140,11 +139,11 @@ const ActionModal = (props) => {
         <Fragment>
             <BackDrop show={show} />
             <div className={show ? 'action-modal shown' : 'action-modal hidden'}>
-                    {ModalBody}
-                
+                {ModalBody}
+
                 <div className='action-modal-buttons'>
                     <AppButton
-                        buttonClass={type == 'DELETE'? 'btn btn-danger' : 'btn btn-yes'}
+                        buttonClass={type == 'DELETE'|| type === 'DELETE_IMG' ? 'btn btn-danger' : 'btn btn-yes'}
                         loading={loading}
                         onClick={handleAction}>
                         დიახ

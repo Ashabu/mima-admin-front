@@ -2,19 +2,19 @@ import axios from 'axios';
 
 class User  {
     GetUsers = async () => {
-        return await axios.get(`http://localhost:8080/getUsers`);
+        return await axios.get(`${globalConfig.api_URL}/getUsers`);
     };
 
     SignUp = async (data) => {
-        return await axios.post(`http://localhost:8080/signUp`, data);
+        return await axios.post(`${globalConfig.api_URL}/signUp`, data);
     }
 
     SignIn = async (data) => {
-        return await axios.post(`http://localhost:8080/signIn`, data);
+        return await axios.post(`${globalConfig.api_URL}/signIn`, data);
     };
 
     DeleteUser = async (id) => {
-        return await axios.delete(`http://localhost:8080/deleteUser/${id}`);
+        return await axios.delete(`${globalConfig.api_URL}/deleteUser/${id}`);
     }
 }
 

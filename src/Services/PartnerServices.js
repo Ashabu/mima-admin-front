@@ -1,20 +1,20 @@
 import axios from 'axios';
 class Partner {
     GetPartners = async () => {
-        return await axios.get(`http://localhost:8080/getPartners`);
+        return await axios.get(`${globalConfig.api_URL}/getPartners`);
     };
 
     CreatePartner = async (data) => {
-        return await axios.post(`http://localhost:8080/addPartner`, data);
+        return await axios.post(`${globalConfig.api_URL}/addPartner`, data);
     }
 
     EditPartner = async (id, data) => {
         console.log(id, data)
-        return await axios.put(`http://localhost:8080/editPartner/${id}`, data);
+        return await axios.put(`${globalConfig.api_URL}/editPartner/${id}`, data);
     };
 
     DeletePartner = async (id) => {
-        return await axios.delete(`http://localhost:8080/deletePartner/${id}`);
+        return await axios.delete(`${globalConfig.api_URL}/deletePartner/${id}`);
     }
 }
 
