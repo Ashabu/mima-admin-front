@@ -35,11 +35,10 @@ const FirstContainer = () => {
         Affiliate.GetAffiliateInfos()
             .then(res => {
                 if (res.data.success) {
-                    console.log(res.data.data.data.length)
                     if (res.data.data.data.length === 0) {
                         setIsLoading(false);
                     } else {
-                        setMainInfo(res.data.data.data[0])
+                        setMainInfo(res.data.data.affiliates[0])
                     }
 
                 } else {

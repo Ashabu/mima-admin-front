@@ -1,4 +1,6 @@
 .app-layout {
+    height: 100vh;
+    overflow: scroll;
     .app-layout-header {
         height: 80px;
         border-bottom: 2px solid black;
