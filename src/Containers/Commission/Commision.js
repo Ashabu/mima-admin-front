@@ -6,6 +6,7 @@ import { AppContext } from '../../Context/AppContext';
 import ActionModal from '../../Components/UI/Modals/ActionModal';
 import AppButton from '../../Components/UI/AppButton/AppButton';
 import ItemList from '../../Components/ItemLIst/ItemList';
+import AmountRange from '../AmountRange/AmountRange';
 
 const Commission = () => {
 
@@ -117,6 +118,7 @@ const Commission = () => {
 
 
 
+
     return (
         <AppLayout>
             <ActionModal
@@ -147,14 +149,7 @@ const Commission = () => {
                                 <img src='../../Assets/Images/delete-icon.png' alt='icon' onClick={() => { setActionType('DELETE'); setShowModal(true) }} />
                             </div>
                         </div>
-                        <div>
-                       { commission?.amountRanges.map((item, index) => (
-                           <ItemList key={index} data={item} index={index}
-                           onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
-                           onGetData={()=>{}}
-                       />
-                   ))}
-                        </div>
+                        <AmountRange amountRanges = {commission?.amountRanges} callBack = {GetCommision}/>
                     </div>
 
                 </div>}

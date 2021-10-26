@@ -19,16 +19,16 @@ class Commisions {
     }
 
     CreateAmountRange = async (data) => {
-        return await axios.post(`${globalConfig.api_URL}/addCommision`, data);
+        return await axios.post(`${globalConfig.api_URL}/addAmountRange`, data);
     }
 
     EditAmountRange = async (id, data) => {
         console.log(id, data)
-        return await axios.put(`${globalConfig.api_URL}/editCommision/${id}`, data);
+        return await axios.put(`${globalConfig.api_URL}/eidtAmountRange/${id}`, data);
     };
 
     DeleteAmountRange = async (id) => {
-        return await axios.delete(`${globalConfig.api_URL}/deleteCommision/${id}`);
+        return await axios.delete(`${globalConfig.api_URL}/deleteAmountRange/${id}`);
     }
 }
 

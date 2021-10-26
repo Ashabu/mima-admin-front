@@ -22,7 +22,7 @@ const AppHeader = () => {
             <div className='app-header-mid'>
                 <ul>
                     <li>
-                        <Link to='firstContainer'>First Container</Link>
+                        <Link to='firstContainer'>Main Banner</Link>
                     </li>
                     <li>
                         <Link to='benefits'>Benefits</Link>
