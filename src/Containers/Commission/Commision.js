@@ -5,6 +5,7 @@ import Commissions from '../../Services/CommissionsService';
 import { AppContext } from '../../Context/AppContext';
 import ActionModal from '../../Components/UI/Modals/ActionModal';
 import AppButton from '../../Components/UI/AppButton/AppButton';
+import ItemList from '../../Components/ItemLIst/ItemList';
 
 const Commission = () => {
 
@@ -32,7 +33,7 @@ const Commission = () => {
         Commissions.GetCommisions()
             .then(res => {
                 if (res.data.success) {
-                    
+
                     setCommission(res.data.data.commissions[0]);
                     setIsLoading(false);
                 } else {
@@ -72,7 +73,7 @@ const Commission = () => {
                     en: '',
                     ru: '',
                 },
-               
+
                 imgUrl: data.imgUrl
             };
             newData.description[activeLang] = data.description;
@@ -95,7 +96,7 @@ const Commission = () => {
     };
 
 
-    
+
     const handleDeleteComission = () => {
         setBtnLoading(true);
         Commissions.DeleteCommision(commission._id).then(res => {
@@ -108,10 +109,10 @@ const Commission = () => {
                 setResponseMessage(res.data.errorMessage.message);
             };
         })
-        .catch(e => {
-            setBtnLoading(false);
-            console.log(e);
-        });
+            .catch(e => {
+                setBtnLoading(false);
+                console.log(e);
+            });
     };
 
 
@@ -134,20 +135,28 @@ const Commission = () => {
                     <div className='cont-1'>
                         <img src={commission?.imgUrl} />
                         <p style={{ fontSize: 24, maxWidth: '100ch' }}>{commission?.description[activeLang]}</p>
-                        {/* <p>{commission?.revenue}</p> */}
+
                         <div className='list-wrap'>
-                        <div className='action-icons' >
-                            <AppButton
-                                buttonClass='button-add'
-                                onClick={() => { setActionType('NEW'); setShowModal(true) }}>
-                                დამატება
-                            </AppButton>
-                            <img  src='../../Assets/Images/edit-icon.png' onClick={() => { setActionType('EDIT'); setShowModal(true) }} />
-                            <img  src='../../Assets/Images/delete-icon.png' alt='icon' onClick={() => { setActionType('DELETE'); setShowModal(true) }} />
+                            <div className='action-icons' >
+                                <AppButton
+                                    buttonClass='button-add'
+                                    onClick={() => { setActionType('NEW'); setShowModal(true) }}>
+                                    დამატება
+                                </AppButton>
+                                <img src='../../Assets/Images/edit-icon.png' onClick={() => { setActionType('EDIT'); setShowModal(true) }} />
+                                <img src='../../Assets/Images/delete-icon.png' alt='icon' onClick={() => { setActionType('DELETE'); setShowModal(true) }} />
+                            </div>
+                        </div>
+                        <div>
+                       { commission?.amountRanges.map((item, index) => (
+                           <ItemList key={index} data={item} index={index}
+                           onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
+                           onGetData={()=>{}}
+                       />
+                   ))}
                         </div>
                     </div>
-                    </div>
-                    
+
                 </div>}
 
         </AppLayout>

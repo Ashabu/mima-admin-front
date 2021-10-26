@@ -3,7 +3,7 @@ import './itemLIst.scss';
 import { AppContext } from '../../Context/AppContext';
 
 const ItemList = (props) => {
-    const {title, description, itemKey, linkUrl, imgUrl} = props.data;
+    const {title, description, itemKey, linkUrl, imgUrl, percent, range} = props.data;
     const {activeLang} = useContext(AppContext)
     return (
         <div className = 'list-item'>
@@ -12,8 +12,8 @@ const ItemList = (props) => {
             </div>
             <div className = 'list-item-body'>
                 <img src = {imgUrl} />
-                <span className = 'list-item-title'>{linkUrl || title[activeLang]}</span>
-                <span className = 'list-item-desc'>{description?.[activeLang]}</span>
+                <span className = 'list-item-title'>{linkUrl || title?.[activeLang] || percent}</span>
+                <span className = 'list-item-desc'>{description?.[activeLang] || range}</span>
             </div>
             
             <div className = 'list-item-edit' onClick = {() => props.onGetData({isEditing:true, data: props.data})} style={{marginRight: 10}}>

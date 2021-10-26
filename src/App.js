@@ -24,16 +24,18 @@ const App =()=> {
       AuthInterceptorSubscription.current.unsubscribe();
     }
   }, [])
-
+const [isinit, setisInit] = useState(false)
 
 //checking if user session is out 
   useEffect(() => {
     console.log(AuthService.isAuthenticated())
     if(AuthService.isAuthenticated()) {
       
-      setUserAuthorized(true)
+      setUserAuthorized(true);
+      setisInit(true);
     } else {
       setUserAuthorized(false)
+      setisInit(true);
     }
   }, [])
 
@@ -43,11 +45,11 @@ const App =()=> {
 
 // logout user 
   const logOut = () => {
-    history.replace({pathname: '/'})
+    history.replace({pathname: '/login'})
   }
 
   useEffect(() => {
-    if(!isUserAuthorized){
+    if(!isUserAuthorized && isinit){
       AuthService.SignOut();
       logOut();
     }
