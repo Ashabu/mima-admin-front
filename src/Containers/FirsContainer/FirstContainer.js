@@ -3,14 +3,16 @@ import './firstContainer.scss';
 import { AppContext } from '../../Context/AppContext';
 import AppLayout from '../../Components/AppLayout/AppLayout';
 import Affiliate from '../../Services/AffiliateService';
+import Image from '../../Services/ImageService';
 import ActionModal from '../../Components/UI/Modals/ActionModal';
 import AppButton from '../../Components/UI/AppButton/AppButton';
 import ImageList from '../../Components/ItemLIst/ImageList';
+import AppPreLoader from '../../Components/AppPreLoader/AppPreLoader';
 
 const FirstContainer = () => {
 
     const [showModal, setShowModal] = useState(false);
-    const [mainInfo, setMainInfo] = useState(undefined);
+    const [affiliates, setAffiliates] = useState(undefined);
     const [isLoading, setIsLoading] = useState(true);
     const [btnLoading, setBtnLoading] = useState(false);
     const [actionType, setActionType] = useState('');
@@ -21,25 +23,25 @@ const FirstContainer = () => {
 
 
     useEffect(() => {
-        GetMainInfo();
+        GetAffiliate();
     }, []);
 
     useEffect(() => {
-        if (mainInfo !== undefined) {
+        if (affiliates !== undefined) {
             setIsLoading(false);
         }
 
-    }, [mainInfo]);
+    }, [affiliates]);
 
-    const GetMainInfo = () => {
+    const GetAffiliate = () => {
         Affiliate.GetAffiliateInfos()
             .then(res => {
                 if (res.data.success) {
                     if (res.data.data.length === 0) {
-                    
+
                         setIsLoading(false);
                     } else {
-                        setMainInfo(res.data.data.affiliates[0])
+                        setAffiliates(res.data.data.affiliates[0])
                     }
 
                 } else {
@@ -51,18 +53,18 @@ const FirstContainer = () => {
             });
     };
 
-    const handleNewMainInfo = (data) => {
+    const handleNewAffiliate = (data) => {
         setBtnLoading(true);
 
         if (actionType == 'EDIT') {
-            let newData = { ...mainInfo }
+            let newData = { ...affiliates }
             newData.title[activeLang] = data.title;
             newData.subTitle[activeLang] = data.description;
             Affiliate.UpdateAffiliateInfo(newData._id, newData).then(res => {
                 if (res.data.success) {
                     setBtnLoading(false);
                     setShowModal(false);
-                    GetMainInfo();
+                    GetAffiliate();
                 } else {
                     setBtnLoading(false);
                 };
@@ -88,7 +90,7 @@ const FirstContainer = () => {
                     if (res.data.success) {
                         setBtnLoading(false);
                         setShowModal(false);
-                        GetMainInfo();
+                        GetAffiliate();
                     } else {
                         setBtnLoading(false);
                         setResponseMessage(res.data.errorMessage.message);
@@ -103,11 +105,11 @@ const FirstContainer = () => {
 
     const handleDeleteMainInfo = () => {
         setBtnLoading(true);
-        Affiliate.DeleteAffiliateInfo(mainInfo._id).then(res => {
+        Affiliate.DeleteAffiliateInfo(affiliates._id).then(res => {
             if (res.data.success) {
                 setBtnLoading(false);
                 setShowModal(false);
-                GetMainInfo();
+                GetAffiliate();
             } else {
                 setBtnLoading(false);
                 setResponseMessage(res.data.errorMessage.message);
@@ -122,34 +124,51 @@ const FirstContainer = () => {
     const handleUploadImg = (value) => {
         console.log(value.imgUrl)
         setBtnLoading(true);
+
         let data = {
             imgUrl: value.imgUrl,
-            relatesTo: mainInfo._id
+            relatesTo: 'Affiliate'
         };
+        if (!imgId) {
+            Image.CreateImage(data).then(res => {
+                if (res.data.success) {
+                    setBtnLoading(false);
+                    setShowModal(false);
+                    GetAffiliate();
+                } else {
+                    setBtnLoading(false);
+                }
 
-        Affiliate.AddAffiliateBaner(data).then(res => {
-            if (res.data.success) {
+            }).catch(e => {
+                console.log(e);
                 setBtnLoading(false);
-                setShowModal(false);
-                GetMainInfo();
-            } else {
-                setBtnLoading(false);
-            }
+            });
+        } else {
+            Image.EditImage(imgId, data).then(res => {
+                if (res.data.success) {
+                    setBtnLoading(false);
+                    setShowModal(false);
+                    GetAffiliate();
+                } else {
+                    setBtnLoading(false);
+                }
 
-        }).catch(e => {
-            console.log(e);
-            setBtnLoading(false);
-        })
+            }).catch(e => {
+                console.log(e);
+                setBtnLoading(false);
+            });
+        }
+
     };
 
     const handleDeleteImg = () => {
         setBtnLoading(true);
-        Affiliate.DeleteAffiliateBaner(mainInfo._id, imgId).then(res => {
-            
+        Image.DeleteImage(imgId).then(res => {
+
             if (res.data.success) {
                 setShowModal(false);
                 setBtnLoading(false);
-                GetMainInfo()
+                GetAffiliate()
             } else {
                 setBtnLoading(false);
                 console.log(res.data.data.message);
@@ -169,47 +188,75 @@ const FirstContainer = () => {
                 show={showModal}
                 onHideModal={() => { setShowModal(false) }}
                 type={actionType}
-                data={mainInfo}
-                onEditData={actionType === 'UPLOAD'? handleUploadImg : handleNewMainInfo}
-                onDeleteData={actionType === 'DELETE_IMG'? handleDeleteImg: handleDeleteMainInfo}
+                data={affiliates}
+                onEditData={actionType === 'UPLOAD' ? handleUploadImg : handleNewAffiliate}
+                onDeleteData={actionType === 'DELETE_IMG' ? handleDeleteImg : handleDeleteMainInfo}
                 loading={btnLoading} />
 
-            {isLoading ? <div>Loading......</div>
+            {isLoading ?
+                <AppPreLoader />
                 :
                 <div className='cont-wrap'>
                     <h1>First Container Page</h1>
                     <div className='cont-1'>
-                        {mainInfo?.images.map((img, i) => (
-                            <ImageList key={i} data={img} onDeleteImg={() =>{setActionType('DELETE_IMG'); setImgId(img._id); setShowModal(true)}} />
+                        {affiliates?.images.map((img, i) => (
+                            <ImageList
+                                key={i}
+                                data={img}
+                                onDeleteImg={() => {
+                                    setActionType('DELETE_IMG');
+                                    setImgId(img._id);
+                                    setShowModal(true)
+                                }}
+                                onEditImg={() => {
+                                    setActionType('UPLOAD');
+                                    setImgId(img._id);
+                                    setShowModal(true)
+                                }}
+                            />
                         ))}
 
-
-
-
-
-                        {mainInfo?.title[activeLang] !== '' ?
+                        {affiliates?.title[activeLang] !== '' ?
                             <div className='list-wrap'>
-                                <p style={{ fontSize: 24 }}>{mainInfo?.title?.[activeLang]}</p>
+                                <p style={{ fontSize: 24 }}>{affiliates?.title?.[activeLang]}</p>
                             </div> : null}
-                        {mainInfo?.subTitle ?
+                        {affiliates?.subTitle ?
                             <div className='list-wrap'>
-                                <p style={{ fontSize: 18 }}>{mainInfo?.subTitle?.[activeLang]}</p>
+                                <p style={{ fontSize: 18 }}>{affiliates?.subTitle?.[activeLang]}</p>
                             </div>
                             : null}
                         <div className='list-wrap'>
                             <div className='action-icons'>
+                                {affiliates ?
+                                    <AppButton
+                                        buttonClass='button-add'
+                                        onClick={() => {
+                                            setActionType('UPLOAD');
+                                            setImgId(null);
+                                            setShowModal(true)
+                                        }}>
+                                        ბანერის დამატება
+                                    </AppButton>
+                                    : null}
                                 <AppButton
                                     buttonClass='button-add'
-                                    onClick={() => { setActionType('NEW'); setShowModal(true) }}>
+                                    onClick={() => {
+                                        setActionType('NEW');
+                                        setShowModal(true)
+                                    }}>
                                     დამატება
                                 </AppButton>
-                                <AppButton
-                                    buttonClass='button-add'
-                                    onClick={() => { setActionType('UPLOAD'); setShowModal(true) }}>
-                                    ბანერის დამატება
-                                </AppButton>
-                                <img src='../../Assets/Images/edit-icon.png' onClick={() => { setActionType('EDIT'); setShowModal(true) }} />
-                                <img src='../../Assets/Images/delete-icon.png' alt='icon' onClick={() => { setActionType('DELETE'); setShowModal(true) }} />
+
+                                <img src='../../Assets/Images/edit-icon.png' onClick={() => {
+                                    setActionType('EDIT');
+                                    setShowModal(true)
+                                }}
+                                />
+                                <img src='../../Assets/Images/delete-icon.png' alt='icon' onClick={() => {
+                                    setActionType('DELETE');
+                                    setShowModal(true)
+                                }}
+                                />
                             </div>
                         </div>
                     </div>

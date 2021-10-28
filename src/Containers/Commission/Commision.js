@@ -7,6 +7,7 @@ import ActionModal from '../../Components/UI/Modals/ActionModal';
 import AppButton from '../../Components/UI/AppButton/AppButton';
 import ItemList from '../../Components/ItemLIst/ItemList';
 import AmountRange from '../AmountRange/AmountRange';
+import AppPreLoader from '../../Components/AppPreLoader/AppPreLoader';
 
 const Commission = () => {
 
@@ -15,10 +16,11 @@ const Commission = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [btnLoading, setBtnLoading] = useState(false);
     const [actionType, setActionType] = useState('');
+    const [actionData, setActionData] = useState(null);
 
 
+    const { activeLang } = useContext(AppContext);
 
-    const { activeLang } = useContext(AppContext)
     useEffect(() => {
         if (commission !== undefined) {
             setIsLoading(false);
@@ -34,7 +36,6 @@ const Commission = () => {
         Commissions.GetCommisions()
             .then(res => {
                 if (res.data.success) {
-
                     setCommission(res.data.data.commissions[0]);
                     setIsLoading(false);
                 } else {
@@ -46,13 +47,12 @@ const Commission = () => {
             });
     };
 
-
     const handleNewCommission = (data) => {
         setBtnLoading(true);
 
         if (actionType == 'EDIT') {
             let newData = { ...commission }
-            newData.title[activeLang] = data.description;;
+            newData.description[activeLang] = data.description;;
             if (data.imgUrl) {
                 newData.imgUrl = data.imgUrl;
             };
@@ -126,11 +126,12 @@ const Commission = () => {
                 show={showModal}
                 onHideModal={() => { setShowModal(false) }}
                 type={actionType}
-                data={commission}
+                data={actionData}
                 onEditData={handleNewCommission}
                 onDeleteData={handleDeleteComission}
                 loading={btnLoading} />
-            {isLoading ? <div>Loading......</div>
+            {isLoading ? 
+            <AppPreLoader/>
                 :
                 <div className='cont-wrap'>
                     <h1>Commissions Page</h1>
@@ -145,11 +146,20 @@ const Commission = () => {
                                     onClick={() => { setActionType('NEW'); setShowModal(true) }}>
                                     დამატება
                                 </AppButton>
-                                <img src='../../Assets/Images/edit-icon.png' onClick={() => { setActionType('EDIT'); setShowModal(true) }} />
-                                <img src='../../Assets/Images/delete-icon.png' alt='icon' onClick={() => { setActionType('DELETE'); setShowModal(true) }} />
+                                <img src='../../Assets/Images/edit-icon.png' onClick={() => {
+                                    setActionType('EDIT');
+                                    setActionData(commission);
+                                    setShowModal(true)
+                                }}
+                                />
+                                <img src='../../Assets/Images/delete-icon.png' alt='icon' onClick={() => {
+                                    setActionType('DELETE');
+                                    setShowModal(true)
+                                }}
+                                />
                             </div>
                         </div>
-                        <AmountRange amountRanges = {commission?.amountRanges} callBack = {GetCommision}/>
+                        <AmountRange amountRanges={commission?.amountRanges} callBack={GetCommision} />
                     </div>
 
                 </div>}

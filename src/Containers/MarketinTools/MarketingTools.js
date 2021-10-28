@@ -2,21 +2,25 @@ import React, { useState, useEffect, useContext } from 'react';
 import './marketingTools.scss';
 import AppLayout from '../../Components/AppLayout/AppLayout';
 import MarketingTool from '../../Services/MarketinToolsServices';
+import Image from '../../Services/ImageService';
 import { AppContext } from '../../Context/AppContext';
 import ItemList from '../../Components/ItemLIst/ItemList';
 import ActionModal from '../../Components/UI/Modals/ActionModal';
 import AppButton from '../../Components/UI/AppButton/AppButton';
 import ImageList from '../../Components/ItemLIst/ImageList';
+import AppPreLoader from '../../Components/AppPreLoader/AppPreLoader';
 
 
 const MarketingTools = () => {
 
-    const [marketingTools, setMarketingTools] = useState([]);
+    const [marketingTools, setMarketingTools] = useState(undefined);
+    const [bannerImg, setBannerImg] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [actionType, setActionType] = useState('');
     const [singleToolData, setSingleToolData] = useState(null);
     const [btnLoading, setBtnLoading] = useState(false);
-    const [imgId, setImgId] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const [imgId, setImgId] = useState(null);
 
     const { activeLang } = useContext(AppContext);
 
@@ -24,11 +28,20 @@ const MarketingTools = () => {
         GetMarketingTools();
     }, []);
 
+    useEffect(() => {
+        if (marketingTools !== undefined) {
+                setIsLoading(false);
+        };
+    }, [marketingTools]);
+
     const GetMarketingTools = () => {
         MarketingTool.GetMarketingTools()
             .then(res => {
+                console.log('res.data ===> ', res.data)
+                console.log('res.data.data ===> ', res.data.data)
                 if (res.data.success) {
                     setMarketingTools(res.data.data.tools);
+                    setBannerImg(res.data.data.images);
                 } else {
                     throw Error()
                 }
@@ -50,7 +63,6 @@ const MarketingTools = () => {
 
     const handleNewTool = (data) => {
         setBtnLoading(true);
-
         if (actionType == 'EDIT') {
             let newData = { ...singleToolData }
             newData.title[activeLang] = data.title;;
@@ -100,7 +112,6 @@ const MarketingTools = () => {
     }
 
     const handleDeleteTool = (id) => {
-
         setBtnLoading(true);
         MarketingTool.DeleteMarketingTool(id).then(res => {
             if (res.data.success) {
@@ -122,28 +133,42 @@ const MarketingTools = () => {
         setBtnLoading(true);
         let data = {
             imgUrl: value.imgUrl,
-            relatesTo: marketingTools[0]._id
+            relatesTo: 'MarketingTool'
         };
+        if (!imgId) {
+            Image.CreateImage(data).then(res => {
+                if (res.data.success) {
+                    setBtnLoading(false);
+                    setShowModal(false);
+                    GetMarketingTools();
+                } else {
+                    setBtnLoading(false);
+                }
 
-        MarketingTool.AddMarketingBaner(data).then(res => {
-            if (res.data.success) {
+            }).catch(e => {
+                console.log(e);
                 setBtnLoading(false);
-                setShowModal(false);
-                GetMarketingTools();
-            } else {
-                setBtnLoading(false);
-            }
+            });
+        } else {
+            Image.EditImage(imgId, data).then(res => {
+                if (res.data.success) {
+                    setBtnLoading(false);
+                    setShowModal(false);
+                    GetAffiliate();
+                } else {
+                    setBtnLoading(false);
+                }
 
-        }).catch(e => {
-            console.log(e);
-            setBtnLoading(false);
-        })
+            }).catch(e => {
+                console.log(e);
+                setBtnLoading(false);
+            });
+        }
     };
 
     const handleDeleteImg = () => {
         setBtnLoading(true);
-        MarketingTool.DeleteMarketingBaner(marketingTools[0]._id, imgId).then(res => {
-
+        Image.DeleteImage(marketingTools[0]._id, imgId).then(res => {
             if (res.data.success) {
                 setShowModal(false);
                 setBtnLoading(false);
@@ -171,34 +196,48 @@ const MarketingTools = () => {
                 onEditData={actionType === 'UPLOAD' ? handleUploadImg : handleNewTool}
                 onDeleteData={actionType === 'DELETE_IMG' ? handleDeleteImg : handleDeleteTool}
                 loading={btnLoading} />
-            <div className='cont-wrap'>
-                <h1>marketingTools Page</h1>
-                <div className='page-header'>
+            {isLoading ?
+                <AppPreLoader />
+                :
+                <div className='cont-wrap'>
+                    <h1>Why Us Page</h1>
+                    <div className='page-header'>
+                        <AppButton
+                            buttonClass='button-add'
+                            onClick={() => { setActionType('NEW'); setShowModal(true) }}>
+                            დამატება
+                        </AppButton>
+                        <AppButton
+                            buttonClass='button-add'
+                            onClick={() => {
+                                setImgId(null);
+                                setActionType('UPLOAD');
+                                setShowModal(true);
+                            }}>
+                            ბანერის დამატება
+                        </AppButton>
+                    </div>
+                    <div className='cont-1'>
+                        <ImageList
+                            data={bannerImg}
+                            onEditImg={() => {
+                                setActionType('UPLOAD');
+                                setImgId(bannerImg._id);
+                                setShowModal(true)
+                            }}
+                            onDeleteImg={() => {
+                                setActionType('DELETE_IMG');
+                                setImgId(bannerImg._id);
+                                setShowModal(true)
+                            }} />
 
-                    <AppButton
-                        buttonClass='button-add'
-                        onClick={() => { setActionType('NEW'); setShowModal(true) }}>
-                        დამატება
-                    </AppButton>
-                    <AppButton
-                        buttonClass='button-add'
-                        onClick={() => { setActionType('UPLOAD'); setShowModal(true) }}>
-                        ბანერის დამატება
-                    </AppButton>
-                </div>
-                <div className='cont-1'>
-                    {marketingTools[0]?.images?.map((img, i) => (
-                        <ImageList key={i} data={img} onDeleteImg={() => { setActionType('DELETE_IMG'); setImgId(img._id); setShowModal(true) }} />
-                    ))}
-                    {marketingTools?.map((tool, i) => (
-                        <ItemList key={i} data={tool} index={i}
-                            onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
-                            onGetData={handleSingleTool} />
-                    ))}
-                </div>
-
-            </div>
-
+                        {marketingTools?.map((tool, i) => (
+                            <ItemList key={i} data={tool} index={i}
+                                onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
+                                onGetData={handleSingleTool} />
+                        ))}
+                    </div>
+                </div>}
         </AppLayout>
     );
 };

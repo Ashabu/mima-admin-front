@@ -7,6 +7,7 @@ import AppButton from '../../Components/UI/AppButton/AppButton';
 import ItemList from '../../Components/ItemLIst/ItemList';
 import ActionModal from '../../Components/UI/Modals/ActionModal';
 import { AppContext } from '../../Context/AppContext';
+import AppPreLoader from '../../Components/AppPreLoader/AppPreLoader';
 
 
 
@@ -19,9 +20,20 @@ const Faqs = () => {
     const [actionType, setActionType] = useState('');
     const [singleFaqData, setSingleFaqData] = useState(null);
     const [btnLoading, setBtnLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [responseMessage, setResponseMessage] = useState('');
+    
 
     const { activeLang } = useContext(AppContext);
+
+
+    useEffect(() => {
+        if (faqs !== undefined) {
+            setIsLoading(false);
+        }
+
+    }, [faqs]);
+
 
     useEffect(() => {
         handleGetFaqs();
@@ -146,6 +158,9 @@ const Faqs = () => {
                 onDeleteData={handleDeleteFaq}
                 loading={btnLoading} />
 
+           {isLoading?
+           <AppPreLoader />
+           :
             <div className='page-container'>
                 <h1>Faqs page</h1>
                 <div className='page-header'>
@@ -164,7 +179,7 @@ const Faqs = () => {
                         />
                     ))}
                 </div>
-            </div>
+            </div>}
         </AppLayout>
 
     );

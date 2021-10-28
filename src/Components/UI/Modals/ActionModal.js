@@ -17,6 +17,7 @@ const ActionModal = (props) => {
     const [uploadLoading, setUploadLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
 
+    console.log(type)
 
     useEffect(() => {
         if (data !== undefined && type == 'EDIT') {
@@ -28,8 +29,11 @@ const ActionModal = (props) => {
             if (data.description) {
                 setNewDescValue(data.description[activeLang]);
             } else if (data.subTitle) {
-                setNewDescValue(data.subTitle[activeLang])
+                setNewDescValue(data.subTitle[activeLang]);
 
+            } else if (data.percent) {
+                setNewValue(data.percent);
+                setNewDescValue(data.range);
             } else {
                 setNewDescValue(data.linkUrl);
             }
@@ -42,6 +46,7 @@ const ActionModal = (props) => {
             setNewValue('');
             setNewDescValue('');
             setImageUrl('');
+            
         };
     }, [data, activeLang]);
 

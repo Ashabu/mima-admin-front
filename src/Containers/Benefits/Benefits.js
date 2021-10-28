@@ -6,6 +6,7 @@ import ActionModal from '../../Components/UI/Modals/ActionModal';
 import ItemListWithImg from '../../Components/ItemLIst/ItemListWithImg';
 import { AppContext } from '../../Context/AppContext';
 import AppButton from '../../Components/UI/AppButton/AppButton';
+import AppPreLoader from '../../Components/AppPreLoader/AppPreLoader';
 
 const Benefits = () => {
 
@@ -15,12 +16,20 @@ const Benefits = () => {
     const [actionType, setActionType] = useState('');
     const [btnLoading, setBtnLoading] = useState(false);
     const [responseMessage, setResponseMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     const { activeLang } = useContext(AppContext);
 
     useEffect(() => {
         GetBenefits();
     }, []);
+
+    useEffect(() => {
+        if (benefits !== undefined) {
+            setIsLoading(false);
+        }
+
+    }, [benefits]);
 
     const GetBenefits = () => {
         Benefit.GetBenefits()
@@ -124,6 +133,7 @@ const Benefits = () => {
 
     return (
         <AppLayout>
+
             <ActionModal
                 show={showModal}
                 onHideModal={() => { setSingleBenefitData(null); setShowModal(false) }}
@@ -133,25 +143,24 @@ const Benefits = () => {
                 onEditData={handleNewBenefit}
                 onDeleteData={handleDeleteBenefit}
                 loading={btnLoading} />
-
-            <div className='cont-wrap'>
-                <h1>Benefits Page</h1>
-                <div className='page-header'>
-                    <AppButton
-                        buttonClass='button-add'
-                        onClick={() => { setSingleBenefitData(null); setActionType('NEW'); setShowModal(true) }}>
-                        დამატება
-                    </AppButton>
-                </div>
-                {benefits?.map((b, i) => (
-                    <ItemListWithImg key={i} data={b} index={i}
-                        onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
-                        onGetData={handleGetSingleBenefit} />
-                ))}
-
-
-            </div>
-
+            {isLoading ?
+                <AppPreLoader />
+                :
+                <div className='cont-wrap'>
+                    <h1>Benefits Page</h1>
+                    <div className='page-header'>
+                        <AppButton
+                            buttonClass='button-add'
+                            onClick={() => { setSingleBenefitData(null); setActionType('NEW'); setShowModal(true) }}>
+                            დამატება
+                        </AppButton>
+                    </div>
+                    {benefits?.map((b, i) => (
+                        <ItemListWithImg key={i} data={b} index={i}
+                            onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
+                            onGetData={handleGetSingleBenefit} />
+                    ))}
+                </div>}
         </AppLayout>
     );
 };
