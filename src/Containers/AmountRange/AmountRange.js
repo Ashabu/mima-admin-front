@@ -88,7 +88,7 @@ const AmountRange = (props) => {
     }
 
     return (
-        <div>
+        <div style={{marginTop: 30}}>
             <ActionModal
                 hasTitle
                 show={showModal}

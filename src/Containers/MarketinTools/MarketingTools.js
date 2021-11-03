@@ -14,7 +14,7 @@ import AppPreLoader from '../../Components/AppPreLoader/AppPreLoader';
 const MarketingTools = () => {
 
     const [marketingTools, setMarketingTools] = useState(undefined);
-    const [bannerImg, setBannerImg] = useState(null);
+    const [bgImg, setBgImg] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [actionType, setActionType] = useState('');
     const [singleToolData, setSingleToolData] = useState(null);
@@ -34,6 +34,8 @@ const MarketingTools = () => {
         };
     }, [marketingTools]);
 
+    console.log(marketingTools)
+
     const GetMarketingTools = () => {
         MarketingTool.GetMarketingTools()
             .then(res => {
@@ -41,7 +43,7 @@ const MarketingTools = () => {
                 console.log('res.data.data ===> ', res.data.data)
                 if (res.data.success) {
                     setMarketingTools(res.data.data.tools);
-                    setBannerImg(res.data.data.images);
+                    setBgImg(res.data.data.images);
                 } else {
                     throw Error()
                 }
@@ -154,7 +156,7 @@ const MarketingTools = () => {
                 if (res.data.success) {
                     setBtnLoading(false);
                     setShowModal(false);
-                    GetAffiliate();
+                    GetMarketingTools();
                 } else {
                     setBtnLoading(false);
                 }
@@ -168,7 +170,7 @@ const MarketingTools = () => {
 
     const handleDeleteImg = () => {
         setBtnLoading(true);
-        Image.DeleteImage(marketingTools[0]._id, imgId).then(res => {
+        Image.DeleteImage(bgImg._id).then(res => {
             if (res.data.success) {
                 setShowModal(false);
                 setBtnLoading(false);
@@ -190,7 +192,7 @@ const MarketingTools = () => {
             <ActionModal
                 hasTitle
                 show={showModal}
-                onHideModal={() => { setSingleToolData(null); setShowModal(false) }}
+                onHideModal={() => { setSingleToolData(undefined); setShowModal(false) }}
                 type={actionType}
                 data={singleToolData}
                 onEditData={actionType === 'UPLOAD' ? handleUploadImg : handleNewTool}
@@ -219,15 +221,15 @@ const MarketingTools = () => {
                     </div>
                     <div className='cont-1'>
                         <ImageList
-                            data={bannerImg}
+                            data={bgImg}
                             onEditImg={() => {
                                 setActionType('UPLOAD');
-                                setImgId(bannerImg._id);
+                                setImgId(bgImg._id);
                                 setShowModal(true)
                             }}
                             onDeleteImg={() => {
                                 setActionType('DELETE_IMG');
-                                setImgId(bannerImg._id);
+                                setImgId(bgImg._id);
                                 setShowModal(true)
                             }} />
 

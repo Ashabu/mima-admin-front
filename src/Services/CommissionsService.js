@@ -15,7 +15,7 @@ class Commisions {
     };
 
     DeleteCommision = async (id) => {
-        return await axios.delete(`${globalConfig.api_URL}/deleteCommision/${id}`);
+        return await axios.delete(`${globalConfig.api_URL}/deleteCommission/${id}`);
     }
 
     CreateAmountRange = async (data) => {

@@ -45,7 +45,7 @@ const ActionModal = (props) => {
             setNewValue('');
             setNewDescValue('');
             setImageUrl('');
-            
+
         };
     }, [data, activeLang]);
 
@@ -76,7 +76,11 @@ const ActionModal = (props) => {
 
     const handleAction = () => {
         if (type == 'DELETE') {
-            onDeleteData(data._id);
+            if (data) {
+                onDeleteData(data._id);
+            } else {
+                onDeleteData();
+            };
             return;
         } else if (type === 'DELETE_IMG') {
             onDeleteData();
@@ -146,7 +150,7 @@ const ActionModal = (props) => {
 
                 <div className='action-modal-buttons'>
                     <AppButton
-                        buttonClass={type == 'DELETE'|| type === 'DELETE_IMG' ? 'btn btn-danger' : 'btn btn-yes'}
+                        buttonClass={type == 'DELETE' || type === 'DELETE_IMG' ? 'btn btn-danger' : 'btn btn-yes'}
                         loading={loading}
                         onClick={handleAction}>
                         დიახ
