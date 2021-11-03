@@ -146,7 +146,7 @@ const Testimonials = () => {
             <ActionModal
                 hasTitle
                 show={showModal}
-                onHideModal={() => { setSingleTestimonialData(null); setShowModal(false) }}
+                onHideModal={() => { setSingleTestimonialData(undefined); setShowModal(false) }}
                 type={actionType}
                 data={singleTestimonialData}
                 onEditData={handleNewTestimonial}

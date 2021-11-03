@@ -8,7 +8,6 @@ const HomePage = () => {
 
     const [link, setLink] = useState(undefined);
     const [showModal, setShowModal] = useState(false);
-    const [singlePartnerData, setSinglePartnerData] = useState(null);
     const [btnLoading, setBtnLoading] = useState(false);
     const [actionType, setActionType] = useState('');
 
@@ -31,6 +30,7 @@ const HomePage = () => {
 
 
     const handleNewLink = (data) => {
+        console.log(data)
         setBtnLoading(true);
         if (actionType == 'NEW') {
             let newData = {
@@ -119,7 +119,10 @@ const HomePage = () => {
                 </div>
                 <AppButton
                         buttonClass='button-add'
-                        onClick={() => {setActionType('NEW'); setShowModal(true) }}>
+                        onClick={() => {
+                            setActionType('NEW'); 
+                            setShowModal(true);
+                            }}>
                         დამატება
                     </AppButton>
 
