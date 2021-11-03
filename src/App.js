@@ -45,7 +45,7 @@ const [isinit, setisInit] = useState(false)
 
 // logout user 
   const logOut = () => {
-    history.replace({pathname: '/login'})
+    history.replace({pathname: '/'})
   }
 
   useEffect(() => {

@@ -39,8 +39,14 @@
             span {
                 text-align: start;
             }
+            
+        }
+
+        p {
+            text-align: center;
         }
     }
+    
     .upload-image {
         display: flex;
         flex-direction: column;

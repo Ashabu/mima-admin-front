@@ -13,7 +13,6 @@ const AmountRange = (props) => {
 
 
     const handleNewAmountRange = (data) => {
-        console.log(data)
         setBtnLoading(true);
 
         if (actionType == 'EDIT') {

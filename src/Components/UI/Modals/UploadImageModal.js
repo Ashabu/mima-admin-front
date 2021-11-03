@@ -23,7 +23,6 @@ const UploadImageModal = (props) => {
         setUploadLoading(true);
         getBase64String(e.target.files[0])
         .then(res => {
-            console.log(res)
             setImageUrl(res);
             setUploadLoading(false);
         })

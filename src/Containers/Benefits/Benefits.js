@@ -35,7 +35,6 @@ const Benefits = () => {
         Benefit.GetBenefits()
             .then(res => {
                 if (res.data.success) {
-                    console.log(res.data.data.benefits)
                     setBenefits(res.data.data.benefits);
 
                 } else {

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from "react-router";
 import { AppContext } from '../../Context/AppContext';
 import './appHeader.scss';
 
@@ -8,6 +9,12 @@ const AppHeader = () => {
 
 
     const { activeLang, setLang } = useContext(AppContext);
+    const history = useHistory();
+
+    
+    const logOut = () => {
+        history.replace({pathname: '/'})
+      }
 
 
 
@@ -60,7 +67,7 @@ const AppHeader = () => {
                     <span>Admin</span>
                 </div>
                 <div className='app-logout'>
-                    <Link to='/'>Logout</Link>
+                    <span onClick={logOut}>Logout</span>
                 </div>
             </div>
 

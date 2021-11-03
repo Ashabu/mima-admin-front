@@ -17,7 +17,6 @@ const ActionModal = (props) => {
     const [uploadLoading, setUploadLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
 
-    console.log(type)
 
     useEffect(() => {
         if (data !== undefined && type == 'EDIT') {
@@ -66,7 +65,6 @@ const ActionModal = (props) => {
         setUploadLoading(true);
         getBase64String(e.target.files[0])
             .then(res => {
-                console.log(res)
                 setImageUrl(res);
                 setUploadLoading(false);
             })

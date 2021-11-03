@@ -13,9 +13,11 @@ const FirstContainer = () => {
 
     const [showModal, setShowModal] = useState(false);
     const [affiliates, setAffiliates] = useState(undefined);
+    const [singleAffiliateData, setSingleAffiliateData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [btnLoading, setBtnLoading] = useState(false);
     const [actionType, setActionType] = useState('');
+    const [banners, setBanners] = useState(undefined);
     const [imgId, setImgId] = useState('');
 
 
@@ -37,12 +39,10 @@ const FirstContainer = () => {
         Affiliate.GetAffiliateInfos()
             .then(res => {
                 if (res.data.success) {
-                    if (res.data.data.length === 0) {
-
-                        setIsLoading(false);
-                    } else {
-                        setAffiliates(res.data.data.affiliates[0])
-                    }
+                    setAffiliates(res.data.data.affiliates);
+                    setBanners(res.data.data.images)
+                    setIsLoading(false);
+                    console.log(res.data.data)
 
                 } else {
                     throw Error()
@@ -55,9 +55,8 @@ const FirstContainer = () => {
 
     const handleNewAffiliate = (data) => {
         setBtnLoading(true);
-
         if (actionType == 'EDIT') {
-            let newData = { ...affiliates }
+            let newData = { ...affiliates[0] }
             newData.title[activeLang] = data.title;
             newData.subTitle[activeLang] = data.description;
             Affiliate.UpdateAffiliateInfo(newData._id, newData).then(res => {
@@ -105,7 +104,7 @@ const FirstContainer = () => {
 
     const handleDeleteMainInfo = () => {
         setBtnLoading(true);
-        Affiliate.DeleteAffiliateInfo(affiliates._id).then(res => {
+        Affiliate.DeleteAffiliateInfo(affiliates[0]._id).then(res => {
             if (res.data.success) {
                 setBtnLoading(false);
                 setShowModal(false);
@@ -122,7 +121,6 @@ const FirstContainer = () => {
     };
 
     const handleUploadImg = (value) => {
-        console.log(value.imgUrl)
         setBtnLoading(true);
 
         let data = {
@@ -178,7 +176,9 @@ const FirstContainer = () => {
                 setBtnLoading(false);
                 console.log(e)
             });
-    }
+    };
+
+    console.log('affiliates', affiliates)
 
     return (
 
@@ -188,7 +188,7 @@ const FirstContainer = () => {
                 show={showModal}
                 onHideModal={() => { setShowModal(false) }}
                 type={actionType}
-                data={affiliates}
+                data={singleAffiliateData}
                 onEditData={actionType === 'UPLOAD' ? handleUploadImg : handleNewAffiliate}
                 onDeleteData={actionType === 'DELETE_IMG' ? handleDeleteImg : handleDeleteMainInfo}
                 loading={btnLoading} />
@@ -199,7 +199,7 @@ const FirstContainer = () => {
                 <div className='cont-wrap'>
                     <h1>First Container Page</h1>
                     <div className='cont-1'>
-                        {affiliates?.images.map((img, i) => (
+                        {banners?.map((img, i) => (
                             <ImageList
                                 key={i}
                                 data={img}
@@ -215,46 +215,49 @@ const FirstContainer = () => {
                                 }}
                             />
                         ))}
-
-                        {affiliates?.title[activeLang] !== '' ?
-                            <div className='list-wrap'>
-                                <p style={{ fontSize: 24 }}>{affiliates?.title?.[activeLang]}</p>
-                            </div> : null}
-                        {affiliates?.subTitle ?
-                            <div className='list-wrap'>
-                                <p style={{ fontSize: 18 }}>{affiliates?.subTitle?.[activeLang]}</p>
-                            </div>
-                            : null}
-                        <div className='list-wrap'>
-                            <div className='action-icons'>
-                                {affiliates ?
-                                    <AppButton
-                                        buttonClass='button-add'
-                                        onClick={() => {
-                                            setActionType('UPLOAD');
-                                            setImgId(null);
-                                            setShowModal(true)
-                                        }}>
-                                        ბანერის დამატება
-                                    </AppButton>
-                                    : null}
+                        <div className='action-icons'>
+                            {affiliates ?
                                 <AppButton
                                     buttonClass='button-add'
                                     onClick={() => {
+                                        setActionType('UPLOAD');
+                                        setImgId(null);
+                                        setShowModal(true)
+                                    }}>
+                                    ბანერის დამატება
+                                </AppButton>
+                                : null}
+                        </div>
+
+                        {affiliates?.[0]?.title ?
+                            <div className='list-wrap'>
+                                <p style={{ fontSize: 24 }}>{affiliates?.[0].title?.[activeLang]}</p>
+                            </div> : null}
+                        {affiliates?.[0]?.subTitle ?
+                            <div className='list-wrap'>
+                                <p style={{ fontSize: 18 }}>{affiliates?.[0].subTitle?.[activeLang]}</p>
+                            </div>
+                            : null}
+                        <div className='list-wrap' style ={{marginTop: 30}}>
+                            <div className='action-icons'>
+                                <AppButton
+                                    buttonClass='button-add'
+                                    onClick={() => {
+                                        setSingleAffiliateData(null);
                                         setActionType('NEW');
                                         setShowModal(true)
                                     }}>
                                     დამატება
                                 </AppButton>
-
                                 <img src='../../Assets/Images/edit-icon.png' onClick={() => {
+                                    setSingleAffiliateData(affiliates[0]);
                                     setActionType('EDIT');
-                                    setShowModal(true)
+                                    setShowModal(true);
                                 }}
                                 />
                                 <img src='../../Assets/Images/delete-icon.png' alt='icon' onClick={() => {
                                     setActionType('DELETE');
-                                    setShowModal(true)
+                                    setShowModal(true);
                                 }}
                                 />
                             </div>
