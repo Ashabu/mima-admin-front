@@ -197,7 +197,7 @@ const FirstContainer = () => {
                 <AppPreLoader />
                 :
                 <div className='cont-wrap'>
-                    <h1>First Container Page</h1>
+                    <h1>Main Banner Page</h1>
                     <div className='cont-1'>
                         {banners?.map((img, i) => (
                             <ImageList
@@ -247,7 +247,7 @@ const FirstContainer = () => {
                                         setActionType('NEW');
                                         setShowModal(true)
                                     }}>
-                                    დამატება
+                                    ტექსტის დამატება
                                 </AppButton>
                                 <img src='../../Assets/Images/edit-icon.png' onClick={() => {
                                     setSingleAffiliateData(affiliates[0]);

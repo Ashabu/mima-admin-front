@@ -3,7 +3,7 @@ import './itemLIst.scss';
 import { AppContext } from '../../Context/AppContext';
 
 const ItemList = (props) => {
-    const {title, description, itemKey, linkUrl, imgUrl, percent, range} = props.data;
+    const {title, description, itemKey, linkUrl, hasLink, imgUrl, percent, range} = props.data;
     const {activeLang} = useContext(AppContext)
     return (
         <div className = 'list-item'>
@@ -12,7 +12,12 @@ const ItemList = (props) => {
             </div>
             <div className = 'list-item-body'>
                 <img src = {imgUrl} />
+                {hasLink? 
+                <a href ={linkUrl} target='_blank'><span className = 'list-item-title'>{title?.[activeLang] || percent}</span></a>
+                :
                 <span className = 'list-item-title'>{linkUrl || title?.[activeLang] || percent}</span>
+                }
+                
                 <span className = 'list-item-desc'>{description?.[activeLang] || range}</span>
             </div>
             

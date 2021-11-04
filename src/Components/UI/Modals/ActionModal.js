@@ -5,7 +5,7 @@ import AppButton from '../AppButton/AppButton';
 import { AppContext } from '../../../Context/AppContext';
 
 const ActionModal = (props) => {
-    const { data, loading, onEditData, onDeleteData, onHideModal, show, type, withImg, hasTitle } = props;
+    const { data, loading, onEditData, onDeleteData, onHideModal, show, type, withImg, hasTitle, hasLink } = props;
 
 
     const { activeLang } = useContext(AppContext);
@@ -14,6 +14,7 @@ const ActionModal = (props) => {
 
     const [newValue, setNewValue] = useState('');
     const [newDescValue, setNewDescValue] = useState('');
+    const [newLinkUrl, setNewLinkUrl] = useState('');
     const [uploadLoading, setUploadLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
 
@@ -23,7 +24,7 @@ const ActionModal = (props) => {
 
             if (data.title) {
                 setNewValue(data.title[activeLang]);
-            }
+            };
 
             if (data.description) {
                 setNewDescValue(data.description[activeLang]);
@@ -35,16 +36,21 @@ const ActionModal = (props) => {
                 setNewDescValue(data.range);
             } else {
                 setNewDescValue(data.linkUrl);
-            }
+            };
 
             if (data.imgUrl) {
                 setImageUrl(data.imgUrl)
+            };
+            if (data.linkUrl) {
+                setNewLinkUrl(data.linkUrl);
             }
+
 
         } else {
             setNewValue('');
             setNewDescValue('');
             setImageUrl('');
+            setNewLinkUrl('');
 
         };
     }, [data, activeLang]);
@@ -85,7 +91,7 @@ const ActionModal = (props) => {
         } else if (type === 'DELETE_IMG') {
             onDeleteData();
         } else {
-            onEditData({ title: newValue, description: newDescValue, imgUrl: imageUrl });
+            onEditData({ title: newValue, description: newDescValue, imgUrl: imageUrl, linkUrl: newLinkUrl });
             return;
         }
     }
@@ -97,12 +103,20 @@ const ActionModal = (props) => {
         ModalBody = (
             <div className='action-modal-body'>
 
-                {hasTitle ? <div className='content'>
-                    <span>
-                        Title
-                    </span>
-                    <input type='text' value={newValue} onInput={(e) => setNewValue(e.target.value)} />
-                </div> : null}
+                {hasTitle ?
+                    <div className='content'>
+                        <span>
+                            Title
+                        </span>
+                        <input type='text' value={newValue} onInput={(e) => setNewValue(e.target.value)} />
+                    </div> : null}
+                {hasLink ?
+                    <div className='content'>
+                        <span>
+                            Link Url
+                        </span>
+                        <input type='text' value={newLinkUrl} onInput={(e) => setNewLinkUrl(e.target.value)} />
+                    </div> : null}
 
                 <div className='content'>
                     <span>

@@ -204,11 +204,7 @@ const MarketingTools = () => {
                 <div className='cont-wrap'>
                     <h1>Why Us Page</h1>
                     <div className='page-header'>
-                        <AppButton
-                            buttonClass='button-add'
-                            onClick={() => { setActionType('NEW'); setShowModal(true) }}>
-                            დამატება
-                        </AppButton>
+                        
                         <AppButton
                             buttonClass='button-add'
                             onClick={() => {
@@ -232,7 +228,11 @@ const MarketingTools = () => {
                                 setImgId(bgImg._id);
                                 setShowModal(true)
                             }} />
-
+                        <AppButton
+                            buttonClass='button-add'
+                            onClick={() => { setActionType('NEW'); setShowModal(true) }}>
+                            ტექსტის დამატება
+                        </AppButton>
                         {marketingTools?.map((tool, i) => (
                             <ItemList key={i} data={tool} index={i}
                                 onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}

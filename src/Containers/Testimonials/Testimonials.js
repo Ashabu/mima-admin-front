@@ -37,7 +37,6 @@ const Testimonials = () => {
     const handleGetTestimonials = () => {
         Testimonial.GetTestimonials().then(res => {
             if (res.data.success) {
-                console.log(res.data.data.testimonials)
                 setTestimonials([...res.data.data.testimonials]);
             } else {
                 console.log('Cannot Get Testimonials');
@@ -82,7 +81,7 @@ const Testimonials = () => {
                     ru: ''
                 }
             };
-            newData.title[activeLang] = data.title;;
+            newData.title[activeLang] = data.title;
             newData.description[activeLang] = data.description;
             console.log(newData)
             Testimonial.CreateTestimonial(newData)
@@ -145,6 +144,7 @@ const Testimonials = () => {
         <AppLayout>
             <ActionModal
                 hasTitle
+                hasLink
                 show={showModal}
                 onHideModal={() => { setSingleTestimonialData(undefined); setShowModal(false) }}
                 type={actionType}
@@ -165,7 +165,7 @@ const Testimonials = () => {
                 </div>
                 <div className='page-body'>
                     {searchInTestimonial?.map((testimonial, i) => (
-                        <ItemList key={i} data={testimonial} index={i}
+                        <ItemList key={i} data={testimonial} index={i} hasLink
                             onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
                             onGetData={handleGetSingleTestimonial}
                         />
