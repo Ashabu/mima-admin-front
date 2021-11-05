@@ -12,11 +12,8 @@ const ItemList = (props) => {
             </div>
             <div className = 'list-item-body'>
                 <img src = {imgUrl} />
-                {hasLink? 
-                <a href ={linkUrl} target='_blank'><span className = 'list-item-title'>{title?.[activeLang] || percent}</span></a>
-                :
-                <span className = 'list-item-title'>{linkUrl || title?.[activeLang] || percent}</span>
-                }
+                
+                <span className = 'list-item-title'>{ title?.[activeLang] ||linkUrl || percent}</span>
                 
                 <span className = 'list-item-desc'>{description?.[activeLang] || range}</span>
             </div>

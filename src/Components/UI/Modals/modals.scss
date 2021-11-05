@@ -6,7 +6,7 @@
     align-items: center;
     position: fixed;
     top: 30%;
-    left: 35%;
+    left: calc(50% - 300px);
     padding: 20px;
     background-color: #FFFFFF;
     border: 1px solid #ccc;
@@ -34,7 +34,6 @@
         .content {
             display: flex;
             flex-direction: column;
-            padding: 20px;
 
             span {
                 text-align: start;
@@ -186,5 +185,9 @@
 }
 
 
-
+@media (max-width: 1350px) {
+    .action-modal {
+        top: 30px;
+    }
+}
 

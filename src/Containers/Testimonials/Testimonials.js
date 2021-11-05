@@ -79,7 +79,8 @@ const Testimonials = () => {
                 description: {
                     en: '',
                     ru: ''
-                }
+                },
+                linkUrl: data.linkUrl
             };
             newData.title[activeLang] = data.title;
             newData.description[activeLang] = data.description;
@@ -103,6 +104,7 @@ const Testimonials = () => {
             let newData = { ...singleTestimonialData };
             newData.title[activeLang] = data.title;
             newData.description[activeLang] = data.description;
+            newData.linkUrl = data.linkUrl;
 
             Testimonial.EditTestimonial(newData._id, newData)
                 .then(res => {
@@ -165,7 +167,7 @@ const Testimonials = () => {
                 </div>
                 <div className='page-body'>
                     {searchInTestimonial?.map((testimonial, i) => (
-                        <ItemList key={i} data={testimonial} index={i} hasLink
+                        <ItemList key={i} data={testimonial} index={i} 
                             onShowModal={() => { setActionType('EDIT'); setShowModal(true) }}
                             onGetData={handleGetSingleTestimonial}
                         />
